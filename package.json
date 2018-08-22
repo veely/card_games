@@ -24,21 +24,5 @@
   },
   "devDependencies": {
     "nodemon": "^1.9.2"
-<<<<<<< HEAD
   }
-=======
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/veely/card_games.git"
-  },
-  "keywords": [
-    "card",
-    "games"
-  ],
-  "bugs": {
-    "url": "https://github.com/veely/card_games/issues"
-  },
-  "homepage": "https://github.com/veely/card_games#readme"
->>>>>>> server
 }
