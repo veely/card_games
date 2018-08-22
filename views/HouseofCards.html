@@ -1,16 +1,25 @@
-CTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 	<title>House of Cards</title>
+
+   <!-- Navbar Css -->
+  <link rel="stylesheet" href="/styles/nav.css" type="text/css" />
+
 </head>
 <body>
+  <nav id="nav-bar">
+    <img class="logo" src="/images/bird.png">
+    <span class="header">House of Cards</span>
+  </nav>
+
 <h2>Welcome to House of Cards!</h2>
     <form method="POST" action="/login">
     	<div>
     		<label for='email'>Email: </label>
     		<input type="email" name="email" placeholder="enter email">
     	</div>
-    	
+
     	<div>
     		<label for='password'>Password: </label>
         	<input type="password" name="password" placeholder="enter password">
