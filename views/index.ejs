@@ -13,7 +13,11 @@
 
   <body>
      <nav id="nav-bar">
-    <img class="logo" src="/images/bird.png">
+<<<<<<< HEAD
+    <img class="logo" src="../public/images/Cards.jpg">
+=======
+    <img class="logo" src="/images/Card.png">
+>>>>>>> features
     <span class="header">House of Cards</span>
   </nav>
     <h2>Welcome to House of Cards!</h2>
@@ -29,6 +33,77 @@
       </div>
 
         <button type = "submit">Login</button>
+
+        <!DOCTYPE html>
+<html>
+<head>
+  <title>Game Page</title>
+      <link rel="stylesheet" href="/styles/Game.css" type="text/css" />
+
+
+</head>
+<body>
+<div id="player1Button">
+<button Card 1> </button>
+<button Card 2> </button>
+<button Card 3> </button>
+<button Card 4> </button>
+<button Card 5> </button>
+<button Card 6> </button>
+<button Card 7> </button>
+<button Card 8> </button>
+<button Card 9> </button>
+<button Card 10> </button>
+<button Card 11> </button>
+<button Card 12> </button>
+<button Card 13> </button>
+</div>
+
+
+<img src="https://images-na.ssl-images-amazon.com/images/I/51BMFuBVHLL.jpg">
+
+
+
+
+<div id="player2Button">
+<button Card 1> </button>
+<button Card 2> </button>
+<button Card 3> </button>
+<button Card 4> </button>
+<button Card 5> </button>
+<button Card 6> </button>
+<button Card 7> </button>
+<button Card 8> </button>
+<button Card 9> </button>
+<button Card 10> </button>
+<button Card 11> </button>
+<button Card 12> </button>
+<button Card 13> </button>
+</div>
+
+
+
+
+</body>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io.connect('http://localhost');
+  socket.on('news', function (data) {
+    console.log(data);
+    socket.emit('my other event', { my: 'data' });
+  });
+
+  socket.emit('chat', { my: 'this is a test'});
+
+
+
+
+
+</script>
+
+</html>
+
     </form>
   </body>
 </html>
