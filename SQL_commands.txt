@@ -13,7 +13,7 @@ CREATE TABLE players (
 );
 
 CREATE TABLE cards (
-  card_name varchar,
+  rank varchar,
   suit varchar
 );
 
@@ -25,21 +25,21 @@ CREATE TABLE suits (
 
 CREATE TABLE games (
   game_name varchar,
-  card_1 int,
-  card_2 int,
-  card_3 int,
-  card_4 int,
-  card_5 int,
-  card_6 int,
-  card_7 int,
-  card_8 int,
-  card_9 int,
-  card_10 int,
-  card_j int,
-  card_q int,
-  card_k int,
-  card_a int,
-  card_joker int
+  rank_1 int,
+  rank_2 int,
+  rank_3 int,
+  rank_4 int,
+  rank_5 int,
+  rank_6 int,
+  rank_7 int,
+  rank_8 int,
+  rank_9 int,
+  rank_10 int,
+  rank_j int,
+  rank_q int,
+  rank_k int,
+  rank_a int,
+  rank_joker int
 );
 
 CREATE TABLE users (
