@@ -33,7 +33,7 @@ app.get("/register", function (req, res) {
   let templateVars = {
     username: req.session.username
   }
-  res.render("register", templateVars)
+  res.render("RegistrationPage", templateVars)
 })
 
 app.get("/players/:username", function (req, res) {
@@ -88,7 +88,8 @@ app.post("/login", function (req, res) {
 app.post("/register", function (req, res) {
   const username = req.body.username
   // compare username to a list of database usernames, boolean if username exists
-  req.session.username = username;
+  // req.session.username = username;
+  console.log("someone has registered")
 })
 
 
@@ -97,30 +98,30 @@ app.post("/register", function (req, res) {
 
 
 
-// namespaces of different games
-const GS = io.of('/goofspiel')
+// // namespaces of different games
+// const GS = io.of('/goofspiel')
 
 
-// goofspiel game
-// GS is your namespace, session ID will be the name of your rooms
-
-
-
-app.get("/games/goofspiel", function (req, res) {
-  // take session_ID cookie (value of submit button from the game page), match
-  res.render("goofspiel");
-  // if no match, alert ("this is not a game that you are a part of")
-})
-
-
-// socket variable is each socket connection
-GS.on('connection', function (socket) {
-  console.log('socket username cookie person has connected')
+// // goofspiel game
+// // GS is your namespace, session ID will be the name of your rooms
 
 
 
-  socket.on('disconnect')
-})
+// app.get("/games/goofspiel", function (req, res) {
+//   // take session_ID cookie (value of submit button from the game page), match
+//   res.render("goofspiel");
+//   // if no match, alert ("this is not a game that you are a part of")
+// })
+
+
+// // socket variable is each socket connection
+// GS.on('connection', function (socket) {
+//   console.log('socket username cookie person has connected')
+
+
+
+//   socket.on('disconnect')
+// })
 
 
 server.listen(PORT, function() {
