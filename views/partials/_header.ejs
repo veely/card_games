@@ -1,48 +1,41 @@
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Home Page</title>
-
-    <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
-    <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
-    <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
-
-    <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
-    <script type="text/javascript" src="/scripts/app.js"></script>
-  </head>
-
-  <body>
-     <nav id="nav-bar">
+<body>
+  <nav id="nav-bar">
     <img class="logo" src="/images/Card.png">
     <span class="header">House of Cards</span>
   </nav>
+<section>
+  <form method="POST" action="/register">
+       <button type="submit" name="register">Register</button>
+  </form>
+  <button name="login">Login</button>
+</section>
+<section>
+  <h2>Welcome, Username</h2>
+  <form method="POST" action="/logout">
+    <button type="submit" name="logout">Logout</button>
+  </form>
+</section>
+<section>
+  <form method="POST" action="/login">
+    <input type="password" name="password" style="width 250px">
+    <label>Password</label>
+    <input type="text" name="Username" style="width 250px">
+    <label>Username</label>
+    <input type="submit" value="Login">
+  </form>
+</section>
 
 
 
-<% if(user){ %>
-  <h1> Welcome <%= `${user.email}` %> !</h1>
-
-<!-- ***********LOGOUT FORM****************** -->
-<form method="POST" action="/logout">
-  <button type = "submit">Logout</button>
-</form>
-<!-- ***************************************** -->
-
-</header>
 
 
 
-<% } else{ %>
-<!-- ***********LINKS TO LOG-IN & REGISTRATION FORMS****************** -->
-
-<h1> Hello there </h1>
-<h3>Please Login if you already have an account <a href="/login">Login</a></h3>
-<h3>If you don't have one then  <a href="/register">Register an account</a> and let the game begin</h3>
-
-<!-- ***************************************** -->
 
 
-<% } %>
+
+
+
+
+
 
 
