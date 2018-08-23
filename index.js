@@ -92,7 +92,9 @@ app.post("/register", function (req, res) {
   console.log("someone has registered")
 })
 
-
+app.post("/logout", function (req, res) {
+  req.session.username = null;
+})
 
 
 
