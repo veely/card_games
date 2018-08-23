@@ -1,13 +1,14 @@
 "use strict";
 
 // required packages and modules
-const express = require('express');
-const app = express();
-const server = require('http').Server(app);
-const PORT = 8080;
-const bodyParser = require("body-parser");
+const express          =    require('express');
+const app              =    express();
+const server           =    require('http').Server(app);
+const io               =    require ("socket.io")(server);
+const PORT             =    8080;
+const bodyParser       =    require("body-parser");
+const cookieSession    =    require("cookie-session");
 
-const cookieSession = require("cookie-session");
 app.use(
   cookieSession({
     name: "session",
