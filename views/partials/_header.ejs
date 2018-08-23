@@ -1,0 +1,28 @@
+
+
+<% if(user){ %>
+  <h1> Welcome <%= `${user.email}` %> !</h1>
+
+<!-- ***********LOGOUT FORM****************** -->
+<form method="POST" action="/logout">
+  <button type = "submit">Logout</button>
+</form>
+<!-- ***************************************** -->
+
+</header>
+
+
+
+<% } else{ %>
+<!-- ***********LINKS TO LOG-IN & REGISTRATION FORMS****************** -->
+
+<h1> Hello there </h1>
+<h3>Please Login if you already have an account <a href="/login">Login</a></h3>
+<h3>If you don't have one then  <a href="/register">Register an account</a> and let the game begin</h3>
+
+<!-- ***************************************** -->
+
+
+<% } %>
+
+

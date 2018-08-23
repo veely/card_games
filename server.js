@@ -70,6 +70,12 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
+// Registration Page
+app.get("/register", (req, res) => {
+  res.render("RegistrationPage.ejs");
+});
+
+//Sockets test
 app.get("/game", (req, res) => {
   res.render("Game");
 });
