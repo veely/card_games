@@ -8,11 +8,38 @@ const express     = require("express");
 const bodyParser  = require("body-parser");
 const sass        = require("node-sass-middleware");
 const app         = express();
+const socket      = require('socket.io');
 
 const knexConfig  = require("./knexfile");
 const knex        = require("knex")(knexConfig[ENV]);
 const morgan      = require('morgan');
 const knexLogger  = require('knex-logger');
+
+//Sockets server connect stuff
+var server = app.listen(3000, function() {
+   console.log('listening to requests on port 3000');
+});
+var io = socket(server);
+
+//****************ROOM LOGIC***************************
+io.on('connection', function(socket) {
+   console.log('made socket connection', socket.id);
+
+   socket.on('chat', function(data) {
+    console.log("this is the data", data);
+      // io.sockets.emit('chat', data);
+   });
+
+   socket.on('typing', function(data) {
+      socket.broadcast.emit('typing', data);
+   });
+
+});
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
 
 // Seperated Routes for each Resource
 const usersRoutes = require("./routes/users");
@@ -42,6 +69,17 @@ app.use("/api/users", usersRoutes(knex));
 app.get("/", (req, res) => {
   res.render("index");
 });
+
+// Registration Page
+app.get("/register", (req, res) => {
+  res.render("RegistrationPage.ejs");
+});
+
+//Sockets test
+app.get("/game", (req, res) => {
+  res.render("Game");
+});
+
 
 app.listen(PORT, () => {
   console.log("Example app listening on port " + PORT);

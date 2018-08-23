@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>House of Cards</title>
+</head>
+<body>
+
+    <h2>Registration</h2>
+    <h3>Please fill out the information below to register</h3>
+    <h3>Please click <a href="/login">here</a> to directly Login if you are already a member </h3>
+
+    <form method="POST" action="/register">
+      <div>
+        <label for='fullName'>Name:</label>
+        <input type="text" name="fullName" placeholder="enter Your Name">
+      </div>
+
+       <div>
+        <label for='birthDate'>Birthdate:</label>
+        <input type="date" name="birthDate" placeholder="date of birth">
+      </div>
+
+
+      <div>
+        <label for='email'>Email: </label>
+        <input type="email" name="email" placeholder="enter email">
+      </div>
+
+       <div>
+        <label for='username'>Username: </label>
+        <input type="email" name="username" placeholder="choose username">
+      </div>
+
+
+      <div>
+        <label for='password'>Password: </label>
+          <input type="password" name="password" placeholder="enter password">
+      </div>
+
+
+        <button type = "submit">Register</button>
+    </form>
+
+</body>
+</html>
