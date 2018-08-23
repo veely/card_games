@@ -1,4 +1,7 @@
-function shuffle(deck) {
+const cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+const suits = ['diamonds', 'clubs', 'hearts', 'spades'];
+
+function shuffleDeck(deck) {
   let currentIndex = deck.length, temporaryValue, randomIndex;
   while (0 !== currentIndex) {
 
@@ -9,29 +12,26 @@ function shuffle(deck) {
     deck[currentIndex] = deck[randomIndex];
     deck[randomIndex] = temporaryValue;
   }
-
   return deck;
 }
 
-// standard 52 card deck
-function createDeck(cards, suits) {
+// standard 52-card deck
+function createDeck(cards, suits, callback) {
   let cardDeck = [];
   for (let card of cards) {
     for (let suit of suits) {
       cardDeck.push(
-        { 
+        {
           rank: card,
           suit: suit
         }
       );
     }
   }
-  return cardDeck;
+  let shuffledDeck = callback(cardDeck);
+  return shuffledDeck;
 }
 
-let cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-let suits = ['diamonds', 'clubs', 'hearts', 'spades'];
-
-let cardDeck = createDeck(cards, suits);
-let shuffledDeck = shuffle(cardDeck);
-console.log(shuffledDeck);
+module.exports = {
+  createDeck: createDeck(cards, suits, shuffleDeck)
+};
