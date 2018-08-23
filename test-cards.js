@@ -20,6 +20,6 @@ knex.select()
 .from('game_sessions')
 .asCallback(function(err, rows){
   if (err) return console.error(err);
-  console.log(rows[0]);
+  console.log(rows);
   knex.destroy();
 });
