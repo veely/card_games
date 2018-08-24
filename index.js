@@ -8,6 +8,8 @@ const PORT = 8080;
 const bodyParser = require("body-parser");
 
 const cookieSession = require("cookie-session");
+app.use(express.static('public'))
+
 app.use(
   cookieSession({
     name: "session",
