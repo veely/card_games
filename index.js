@@ -44,17 +44,17 @@ app.get("/players/:username", function (req, res) {
 })
 
 app.get("/games/goofspiel", function (req, res) {
-  if (!req.session.username) {
-    res.render("/");
-    alert("You need to log in or register to play a game!")
-  }
-  else {
-  req.session.sessionID = null
-  let templateVars = {
-    username: req.session.username,
-  }
-  res.render("goofspielSessionList", templateVars);
-  }
+  // if (!req.session.username) {
+  //   res.render("/");
+  //   alert("You need to log in or register to play a game!")
+  // }
+  // else {
+  // req.session.sessionID = null
+  // let templateVars = {
+  //   username: req.session.username,
+  // }
+  res.render("gespielSession");
+  // }
 })
 
 app.get("/games/goofspiel/:sessionID", function (req, res) {
