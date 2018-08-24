@@ -8,37 +8,36 @@
       <% include ./partials/_header %>
     </header>
     <h4>Your Games</h4>
-
-    <button><h5>Create Game</h5></button>
-
-    <h3>List of Sessions </h3>
-
-  <table>
-    <tr>
-      <th>Session</th>
-      <th>Game</th>
-      <th>Opponent</th>
-      <th></th>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td>Gespiel</td>
-      <td>Germany</td>
-      <td>
-        <button>Join Game</button>
-      </td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>Solitaire</td>
-      <td>Mexico</td>
-      <td>
-        <button>Join Game</button>
-      </td>
-    </tr>
-
-  </table>
-
+    <form method="GET" action="/games/goofspiel/:sessionID">
+      <input type="submit" value="Create Game" id="createButton">
+    </form>
+    <main>
+      <h3>List of Sessions </h3>
+      <table>
+        <tr>
+          <th>Session</th>
+          <th>Game</th>
+          <th>Opponent</th>
+          <th></th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>Gespiel</td>
+          <td>Germany</td>
+          <td>
+            <button>Join Game</button>
+          </td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Solitaire</td>
+          <td>Mexico</td>
+          <td>
+            <button>Join Game</button>
+          </td>
+        </tr>
+      </table>
+    </main>
   </body>
 </html>
 
