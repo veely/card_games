@@ -26,8 +26,12 @@ GS.on('connection', function(socket) {
 
 $(document).ready(function() {
   $("#loginSubmit").click(function () {
-    //fix
-    $.post("/login", "data that you want to send", function() {
+    let $loginInfo = {
+    username: $("#usernameText"),
+    password: $("#passwordText")
+    }
+
+    $.post("/login", $loginInfo, function() {
     })
   })
 
