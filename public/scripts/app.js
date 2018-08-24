@@ -25,6 +25,7 @@ GS.on('connection', function(socket) {
 // header
 
 $(document).ready(function() {
+  // header buttons
   $("#loginSubmit").click(function () {
     let $loginInfo = {
     username: $("#usernameText"),
@@ -47,8 +48,7 @@ $(document).ready(function() {
     })
   })
 
-  // $("logout").click(function() {
-  //   $.post("/logout");
-  // })
+
+
 
 })

@@ -20,12 +20,18 @@
     </header>
     <main class="container" id="gameList">
       <h3>List of Games</h3>
-      <button id="goofspielNav"><li>Goofspiel</li></button>
-      <a href="https://en.wikipedia.org/wiki/Goofspiel">Goofspiel Instructions</a>
-      <button><li>Game two</li></button>
-      <a href="www.wikiinstructions.com">Game Two Instructions</a>
-      <button><li>Game three</li></button>
-      <a href="www.wikiinstructions.com">Game Three Instructions</a>
+      <form method="GET" action="/games/goofspiel">
+        <input type="submit" id="goofspielNav" value="Goofspiel">
+        <a href="https://en.wikipedia.org/wiki/Goofspiel">Goofspiel Instructions</a>
+      </form>
+      <form method="GET" action="/games/goofspiel">
+        <input type="submit" id="goofspielNav" value="Blackjack">
+        <a href="www.wikiinstructions.com">Game Two Instructions</a>
+      </form>
+      <form method="GET" action="/games/goofspiel">
+        <input type="submit" id="goofspielNav" value="5 Card Draw">
+        <a href="www.wikiinstructions.com">Game Three Instructions</a>
+      </form>
     </main>
     <main class="container" id="gameList">
       <h1>List of Player Rankings</h1>

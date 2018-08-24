@@ -43,7 +43,7 @@ app.get("/players/:username", function (req, res) {
   let templateVars = {
     username: req.session.username
   }
-  res.render("archive", templateVars)
+  res.render("player-archive", templateVars)
 })
 
 app.get("/games/goofspiel", function (req, res) {
@@ -56,7 +56,7 @@ app.get("/games/goofspiel", function (req, res) {
   // let templateVars = {
   //   username: req.session.username,
   // }
-  res.render("gespielSession", templateVars);
+  res.render("gespielSession");
   // }
 })
 
