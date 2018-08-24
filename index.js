@@ -55,7 +55,7 @@ app.get("/games/goofspiel", function (req, res) {
   // let templateVars = {
   //   username: req.session.username,
   // }
-  res.render("gespielSession");
+  res.render("gespielSession", templateVars);
   // }
 })
 
