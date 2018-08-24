@@ -1,0 +1,62 @@
+
+exports.seed = function(knex, Promise) {
+  // Deletes ALL existing entries
+  return knex('cards').del()
+    .then(function () {
+      return Promise.all([
+        // Inserts seed entries
+        knex('cards').insert({ rank: '2', suit: 'diamonds'}),
+        knex('cards').insert({ rank: '2', suit: 'clubs'}),
+        knex('cards').insert({ rank: '2', suit: 'hearts'}),
+        knex('cards').insert({ rank: '2', suit: 'spades'}),
+        knex('cards').insert({ rank: '3', suit: 'diamonds'}),
+        knex('cards').insert({ rank: '3', suit: 'clubs'}),
+        knex('cards').insert({ rank: '3', suit: 'hearts'}),
+        knex('cards').insert({ rank: '3', suit: 'spades'}),
+        knex('cards').insert({ rank: '4', suit: 'diamonds'}),
+        knex('cards').insert({ rank: '4', suit: 'clubs'}),
+        knex('cards').insert({ rank: '4', suit: 'hearts'}),
+        knex('cards').insert({ rank: '4', suit: 'spades'}),
+        knex('cards').insert({ rank: '5', suit: 'diamonds'}),
+        knex('cards').insert({ rank: '5', suit: 'clubs'}),
+        knex('cards').insert({ rank: '5', suit: 'hearts'}),
+        knex('cards').insert({ rank: '5', suit: 'spades'}),
+        knex('cards').insert({ rank: '6', suit: 'diamonds'}),
+        knex('cards').insert({ rank: '6', suit: 'clubs'}),
+        knex('cards').insert({ rank: '6', suit: 'hearts'}),
+        knex('cards').insert({ rank: '6', suit: 'spades'}),
+        knex('cards').insert({ rank: '7', suit: 'diamonds'}),
+        knex('cards').insert({ rank: '7', suit: 'clubs'}),
+        knex('cards').insert({ rank: '7', suit: 'hearts'}),
+        knex('cards').insert({ rank: '7', suit: 'spades'}),
+        knex('cards').insert({ rank: '8', suit: 'diamonds'}),
+        knex('cards').insert({ rank: '8', suit: 'clubs'}),
+        knex('cards').insert({ rank: '8', suit: 'hearts'}),
+        knex('cards').insert({ rank: '8', suit: 'spades'}),
+        knex('cards').insert({ rank: '9', suit: 'diamonds'}),
+        knex('cards').insert({ rank: '9', suit: 'clubs'}),
+        knex('cards').insert({ rank: '9', suit: 'hearts'}),
+        knex('cards').insert({ rank: '9', suit: 'spades'}),
+        knex('cards').insert({ rank: '10', suit: 'diamonds'}),
+        knex('cards').insert({ rank: '10', suit: 'clubs'}),
+        knex('cards').insert({ rank: '10', suit: 'hearts'}),
+        knex('cards').insert({ rank: '10', suit: 'spades'}),
+        knex('cards').insert({ rank: 'J', suit: 'diamonds'}),
+        knex('cards').insert({ rank: 'J', suit: 'clubs'}),
+        knex('cards').insert({ rank: 'J', suit: 'hearts'}),
+        knex('cards').insert({ rank: 'J', suit: 'spades'}),
+        knex('cards').insert({ rank: 'Q', suit: 'diamonds'}),
+        knex('cards').insert({ rank: 'Q', suit: 'clubs'}),
+        knex('cards').insert({ rank: 'Q', suit: 'hearts'}),
+        knex('cards').insert({ rank: 'Q', suit: 'spades'}),
+        knex('cards').insert({ rank: 'K', suit: 'diamonds'}),
+        knex('cards').insert({ rank: 'K', suit: 'clubs'}),
+        knex('cards').insert({ rank: 'K', suit: 'hearts'}),
+        knex('cards').insert({ rank: 'K', suit: 'spades'}),
+        knex('cards').insert({ rank: 'A', suit: 'diamonds'}),
+        knex('cards').insert({ rank: 'A', suit: 'clubs'}),
+        knex('cards').insert({ rank: 'A', suit: 'hearts'}),
+        knex('cards').insert({ rank: 'A', suit: 'spades'})
+      ]);
+    });
+};
