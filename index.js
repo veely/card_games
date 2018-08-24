@@ -32,10 +32,10 @@ app.get("/", function (req, res) {
 })
 
 app.get("/register", function (req, res) {
-  let templateVars = {
-    username: req.session.username
-  }
-  res.render("RegistrationPage", templateVars)
+  // let templateVars = {
+  //   username: req.session.username
+  // }
+  res.render("RegistrationPage")
 })
 
 app.get("/players/:username", function (req, res) {
@@ -91,7 +91,7 @@ app.post("/register", function (req, res) {
   const username = req.body.username
   // compare username to a list of database usernames, boolean if username exists
   // req.session.username = username;
-  console.log("someone has registered")
+  console.log("someone has registered", req.body)
 })
 
 app.post("/logout", function (req, res) {

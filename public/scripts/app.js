@@ -22,4 +22,29 @@ GS.on('connection', function(socket) {
 
 
 
-$.get
+// header
+
+$(document).ready(function() {
+  $("#loginSubmit").click(function () {
+    //fix
+    $.post("/login", "data that you want to send", function() {
+    })
+  })
+
+  $("#registerSubmit").click(function() {
+    let $registerInfo = {
+      name: $("#fullNameReg"),
+      birthdate: $("birthDateReg"),
+      email: $("emailReg"),
+      username: $("usernameReg"),
+      password: $("passwordReg")
+    }
+    $.post("/register", $registerInfo, function() {
+//$.ajax(method="POST")
+    })
+  })
+
+  $("logout").click(function() {
+
+  })
+})
