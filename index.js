@@ -60,22 +60,22 @@ app.get("/games/goofspiel", function (req, res) {
 })
 
 app.get("/games/goofspiel/:sessionID", function (req, res) {
-  req.session.sessionID = req.params.sessionID;
+  // req.session.sessionID = req.params.sessionID;
   const username = req.session.username
   let templateVars = {
     username: username,
     sessionID: req.session.sessionID
   }
-  if (!req.session.username) {
-    res.redirect("/")
-    alert("You must log in to play the game!");
-  } else if (true) {
-  // check if the username is in the session's players
-    res.redirect("/")
-    alert("this is not your game!")
-  } else {
-    res.redirect("goofspielGameBoard", templateVars)
-  }
+  // if (!req.session.username) {
+  //   res.redirect("/")
+  //   alert("You must log in to play the game!");
+  // } else if (true) {
+  // // check if the username is in the session's players
+  //   res.redirect("/")
+  //   alert("this is not your game!")
+  // } else {
+    res.render("goofspiel", templateVars)
+  // }
 })
 
 
@@ -96,6 +96,8 @@ app.post("/register", function (req, res) {
 
 app.post("/logout", function (req, res) {
   req.session.username = null;
+  console.log("somebody logged out");
+  res.redirect("/");
 })
 
 

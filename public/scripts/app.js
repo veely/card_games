@@ -40,11 +40,11 @@ $(document).ready(function() {
       password: $("passwordReg")
     }
     $.post("/register", $registerInfo, function() {
-//$.ajax(method="POST")
     })
   })
 
-  $("logout").click(function() {
+  // $("logout").click(function() {
+  //   $.post("/logout");
+  // })
 
-  })
 })
