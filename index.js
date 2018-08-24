@@ -8,6 +8,7 @@ const PORT = 8080;
 const bodyParser = require("body-parser");
 
 const cookieSession = require("cookie-session");
+
 app.use(express.static('public'))
 
 app.use(
@@ -128,7 +129,6 @@ app.post("/logout", function (req, res) {
 
 //   socket.on('disconnect')
 // })
-
 
 server.listen(PORT, function() {
   console.log(`Example app listening on port ${PORT}!`);
