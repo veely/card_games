@@ -33,5 +33,5 @@ function createDeck(cards, suits, callback) {
 }
 
 module.exports = {
-  createDeck: createDeck(cards, suits, shuffleDeck)
+  deck: createDeck(cards, suits, shuffleDeck)
 };
