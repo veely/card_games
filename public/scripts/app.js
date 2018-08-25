@@ -50,8 +50,4 @@ $(document).ready(function() {
     $.post("/register", $registerInfo, function() {
     })
   })
-
-
-
-
 })

@@ -40,7 +40,7 @@ app.get("/register", function (req, res) {
   // let templateVars = {
   //   username: req.session.username
   // }
-  res.render("RegistrationPage")
+  res.render("register")
 })
 
 app.get("/players/:username", function (req, res) {
@@ -60,40 +60,41 @@ app.get("/games/goofspiel", function (req, res) {
   // let templateVars = {
   //   username: req.session.username,
   // }
-  res.render("gespielSession");
+  res.render("goofspielSessionList");
   // }
 })
 
+app.get("/games/goofspiel/new", function (req, res) {
+  req.session.username = 'vincent';
+  let templateVars = {
+    username: req.session.username
+  }
+  res.render("newGoofspielGame", templateVars)
+})
+
 app.get("/games/goofspiel/:sessionID", function (req, res) {
+  req.session.sessionID = req.params.sessionID;
+  req.session.username = 'vincent'
   knex.select('username', 'hand')
     .from('players')
     .where({
-      'session_id': req.params.sessionID
+      'session_id': req.params.sessionID,
+      'username': req.session.username
     })
     .asCallback(function(err, rows) {
+      let currentHand;
+      for (let player of rows) {
+        currentHand = player.hand
+      }
+      let templateVars = {
+        currentHand: currentHand,
+        username: req.session.username,
+        sessionID: req.session.sessionID
+      }
+      res.render("goofspiel", templateVars);
+      console.log(currentHand);
       console.log(rows);
     })
-
-
-
-
-
-  // req.session.sessionID = req.params.sessionID;
-  const username = req.session.username
-  let templateVars = {
-    username: username,
-    sessionID: req.session.sessionID
-  }
-  // if (!req.session.username) {
-  //   res.redirect("/")
-  //   alert("You must log in to play the game!");
-  // } else if (true) {
-  // // check if the username is in the session's players
-  //   res.redirect("/")
-  //   alert("this is not your game!")
-  // } else {
-    res.render("goofspiel", templateVars)
-  // }
 })
 
 
@@ -120,7 +121,9 @@ app.post("/logout", function (req, res) {
   res.redirect("/");
 })
 
-
+app.post("/goofspiel/newGameMove", function (req, res) {
+  let cardPlayed = Object.keys(req.body)[0];
+})
 
 
 
