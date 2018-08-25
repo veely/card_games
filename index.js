@@ -114,7 +114,7 @@ app.get("/games/goofspiel/new", function (req, res) {
   res.render("newGoofspielGame", templateVars)
 
   let GSNew = io.of("/goofspielNew")
-  GSNew.on('connection', function(socket) {
+  GSNew.once('connection', function(socket) {
     GSNew.emit('newJoin', "You've joined a game!");
 
     socket.on('latestCard', function (from, msg) {

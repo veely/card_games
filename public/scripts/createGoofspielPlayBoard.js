@@ -130,18 +130,17 @@ $(document).ready(function() {
   const socket = io.connect('/goofspielNew');
   newBoardState();
   socket.on('newJoin', function (data) {
+    console.log(data);
     $(".card").click(function() {
       let $cardValue = ($(this).val());
       $(this).remove();
       updateBoardState();
-      if ($cardValue) {
-        socket.emit('latestCard', "player", $cardValue);
-        console.log("your card value has been sent")
-      }
+      socket.emit('latestCard', "player", $cardValue);
+      console.log("your card value has been sent")
+      })
     })
-  });
+});
 
-})
 
 
   // var socket = io.connect('http://localhost:8080');
