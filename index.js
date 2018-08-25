@@ -51,18 +51,41 @@ app.get("/players/:username", function (req, res) {
 })
 
 app.get("/games/goofspiel", function (req, res) {
-  // if (!req.session.username) {
-  //   res.render("/");
-  //   alert("You need to log in or register to play a game!")
-  // }
-  // else {
-  // req.session.sessionID = null
-  // let templateVars = {
-  //   username: req.session.username,
-  // }
-  res.render("goofspielSessionList");
-  // }
-})
+  req.session.username = 'vincent';
+  let username = req.session.username
+  knex.select('session_id')
+    .from('players')
+    .where({
+      'username': username
+    })
+    .asCallback (function(err, rows){
+      for (let session of rows) {
+        let sessionLoad = session.session_id
+        knex.select('username', 'session_id')
+          .from('players')
+          .where({
+            'session_id': sessionLoad
+          })
+          .whereNot ({
+            'username': username
+          })
+          .asCallback (function(err, rows) {
+            req.session.session_id = null
+            let templateVars = {
+              username: username,
+              opponentUsername: rows[0].username,
+              session_id: rows[0].session_id
+            }
+            res.render("goofspielSessionList", templateVars)
+          });
+      }
+    });
+  // res.render("goofspielSessionList", templateVars)
+// may have to look into promises, error for not being able to set headers after they are sent
+});
+/////////CHECKOUT HERE
+
+
 
 app.get("/games/goofspiel/new", function (req, res) {
   req.session.username = 'vincent';
@@ -71,6 +94,8 @@ app.get("/games/goofspiel/new", function (req, res) {
   }
   res.render("newGoofspielGame", templateVars)
 })
+
+
 
 app.get("/games/goofspiel/:sessionID", function (req, res) {
   req.session.sessionID = req.params.sessionID;

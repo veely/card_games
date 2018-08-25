@@ -39,19 +39,19 @@ function createOpponentHand () {
 
 function createMyHand () {
   let myHandCode = `
-  <input type="submit" class='card card1' value='1'>
-  <input type="submit" class='card card2' value='2'>
-  <input type="submit" class='card card3' value='3'>
-  <input type="submit" class='card card4' value='4'>
-  <input type="submit" class='card card5' value='5'>
-  <input type="submit" class='card card6' value='6'>
-  <input type="submit" class='card card7' value='7'>
-  <input type="submit" class='card card8' value='8'>
-  <input type="submit" class='card card9' value='9'>
-  <input type="submit" class='card card10' value='10'>
-  <input type="submit" class='card card11' value='11'>
-  <input type="submit" class='card card12' value='12'>
-  <input type="submit" class='card card13' value='13'>
+  <button type="submit" class='card card1' value="1">A</button>
+  <button type="submit" class='card card1' value="2">2</button>
+  <button type="submit" class='card card1' value="3">3</button>
+  <button type="submit" class='card card1' value="4">4</button>
+  <button type="submit" class='card card1' value="5">5</button>
+  <button type="submit" class='card card1' value="6">6</button>
+  <button type="submit" class='card card1' value="7">7</button>
+  <button type="submit" class='card card1' value="8">8</button>
+  <button type="submit" class='card card1' value="9">9</button>
+  <button type="submit" class='card card1' value="10">10</button>
+  <button type="submit" class='card card1' value="11">J</button>
+  <button type="submit" class='card card1' value="12">Q</button>
+  <button type="submit" class='card card1' value="13">K</button>
   `;
   return myHandCode
 }
@@ -113,7 +113,8 @@ $(document).ready(function() {
   renderOppHand();
   renderPrizeCards();
   $(".card").click(function() {
-    let $cardValue = ($(this)[0].defaultValue);
+    let $cardValue = ($(this).val());
+    console.log($cardValue)
     score1 += Number(cardValue)
     cardCount -- ;
     $(this).remove();
