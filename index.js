@@ -5,21 +5,17 @@ require('dotenv').config();
 const ENV         = process.env.ENV || "development";
 const express     = require("express");
 const sass        = require("node-sass-middleware");
-
 const knexConfig  = require("./knexfile");
 const knex        = require("knex")(knexConfig[ENV]);
 const morgan      = require('morgan');
 const knexLogger  = require('knex-logger');
-
-// required packages and modules
 const app = express();
 const server = require('http').Server(app);
 const PORT = 8080;
 const bodyParser = require("body-parser");
-
 const cookieSession = require("cookie-session");
+const draw = require('./public/scripts/draw_cards');
 
-  // var draw = require('./test-cards');
 
 app.use(express.static('public'));
 
@@ -91,7 +87,18 @@ app.get("/games/goofspiel/:sessionID", function (req, res) {
   // }
 })
 
-
+app.post("/games/goofspiel/:sessionID", function (req, res) {
+  let deck = req.body.deck;
+  let playerOneHand = req.body.playerOneHand;
+  let drawIndex = req.body.drawIndex;
+  draw.drawCards(drawIndex, deck, playerOneHand).then( result => {
+    console.log(result);
+  })
+  .catch( err => {
+    console.log(err);
+  });
+  res.send(201);
+});
 
 app.post("/login", function (req, res) {
   const username = req.body.username;

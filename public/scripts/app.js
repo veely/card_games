@@ -10,6 +10,7 @@ $(() => {
 });
 
 
+
 // const GS = io('/goofspiel');
 
 
@@ -26,7 +27,11 @@ $(() => {
 
 $(document).ready(function() {
 
-  // var draw = require('./test-cards');
+  const cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+  const suits = ['diamonds', 'clubs', 'hearts', 'spades'];
+  const deck = (createDeck(cards, suits, shuffleDeck));
+  let drawIndex = 0;
+  let playerOneHand = [];
 
   // header buttons
   $("#loginSubmit").click(function () {
@@ -52,14 +57,15 @@ $(document).ready(function() {
   })
 
   $("#rank_1").click(function() {
-    drawCards(1).then( result => {
-    // do something after drawing card
-      console.log(result);
-    })
-    .catch(err => {
-      console.log("Error:", err);
-    });
+    // drawCards(drawIndex, deck, playerOneHand).then( result => {
+    // // do something after drawing card
+    //   console.log(result);
+    // })
+    // .catch(err => {
+    //   console.log("Error:", err);
+    // });
+    $.post("/games/goofspiel/:sessionID", { drawIndex: drawIndex, deck: deck, playerOneHand: playerOneHand })
+
+    drawIndex++;
   })
-
-
 })

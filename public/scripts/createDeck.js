@@ -1,6 +1,5 @@
-const cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-const suits = ['diamonds', 'clubs', 'hearts', 'spades'];
-
+// const cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+// const suits = ['diamonds', 'clubs', 'hearts', 'spades'];
 function shuffleDeck(deck) {
   let currentIndex = deck.length, temporaryValue, randomIndex;
   while (0 !== currentIndex) {
@@ -15,8 +14,10 @@ function shuffleDeck(deck) {
   return deck;
 }
 
+
 // standard 52-card deck
 function createDeck(cards, suits, callback) {
+  console.log(cards);
   let cardDeck = [];
   for (let card of cards) {
     for (let suit of suits) {
@@ -32,6 +33,6 @@ function createDeck(cards, suits, callback) {
   return shuffledDeck;
 }
 
-module.exports = {
-  deck: createDeck(cards, suits, shuffleDeck)
-};
+// module.exports = {
+//   deck: createDeck(cards, suits, shuffleDeck)
+// };
