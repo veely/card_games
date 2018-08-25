@@ -103,33 +103,63 @@ function renderScoreBoard() {
   $('.scoreboardContainer').append($scoreString);
 }
 
+// helper functions for rendering new and updated board states
+function newBoardState () {
+  renderScoreBoard();
+  renderMyHand();
+  renderOppHand();
+  renderPrizeCards();
+}
+
+function updateBoardState () {
+  score1 += Number(cardValue)
+  cardCount -- ;
+  $(".new-prize-hand").remove();
+  $(".scoreboard").remove();
+  $(".oppHand").remove();
+  renderPrizeCards()
+  renderScoreBoard();
+  renderOppHand();
+}
+
 // add conditional for comparing cardvalue to p2 before adding score
 // make a database for recording player archive data (who y)
 // when score on both sides add up to 91, game ends, player archive data is recorded, player wins is updated
 
 $(document).ready(function() {
-  renderScoreBoard();
-  renderMyHand();
-  renderOppHand();
-  renderPrizeCards();
-  $(".card").click(function() {
-    let $cardValue = ($(this).val());
-    console.log($cardValue)
-    score1 += Number(cardValue)
-    cardCount -- ;
-    $(this).remove();
-    $(".new-prize-hand").remove();
-    $(".scoreboard").remove();
-    $(".oppHand").remove();
-    renderPrizeCards()
-    renderScoreBoard();
-    renderOppHand();
+  newBoardState();
+
+
+  const socket = io.connect('/goofspielNew');
+  socket.on('newJoin', function (data) {
+    console.log(data);
+    socket.emit('latestCard', "player", $cardValue);
+  });
+
+
+    $(".card").click(function() {
+      let $cardValue = ($(this).val());
+      $(this).remove();
+      updateBoardState();
+
+
     $.ajax({
       method: "POST",
       url: "/goofspiel/newGameMove",
-      data: $(this).val()
+      data: $cardValue
     })
+
   })
+
+
+  // var socket = io.connect('http://localhost:8080');
+  // socket.on('server', function (data) {
+  //   console.log(data);
+  //   socket.emit('gameBoard', "gamsession","hi, this is the game message");
+  // });
+
 })
+
+
 
 

@@ -2,16 +2,23 @@
 
 require('dotenv').config();
 // required packages and modules
-const ENV         = process.env.ENV || "development";
-const express = require('express');
-const app = express();
-const server = require('http').Server(app);
-const PORT        = process.env.PORT || 8080;
-const bodyParser = require("body-parser");
-const knexConfig  = require("./knexfile");
-const knex        = require("knex")(knexConfig[ENV]);
+const ENV             = process.env.ENV || "development";
+const express         = require('express');
+const app             = express();
+const server          = require('http').createServer(app);
+const io              = require ('socket.io').listen(server);
+const PORT            = process.env.PORT || 8080;
+const bodyParser      = require("body-parser");
+const knexConfig      = require("./knexfile");
+const knex            = require("knex")(knexConfig[ENV]);
+const cookieSession   = require("cookie-session");
 
-const cookieSession = require("cookie-session");
+
+server.listen(PORT, function() {
+  console.log(`Example app listening on port ${PORT}!`);
+});
+
+
 
 app.use(express.static('public'))
 
@@ -85,15 +92,42 @@ app.get("/games/goofspiel", function (req, res) {
 });
 /////////CHECKOUT HERE
 
+// io.on('connection', function (socket) {
+//   io.emit('server', "hi this is the server message");
+
+//   socket.on('gameBoard', function (from, msg) {
+//     console.log('I received a private message by ', from, ' saying ', msg);
+//   });
+
+// });
+
+
 
 
 app.get("/games/goofspiel/new", function (req, res) {
   req.session.username = 'vincent';
+  req.session.sessionID = 3
   let templateVars = {
-    username: req.session.username
+    username: req.session.username,
+    sessionID: req.session.sessionID
   }
   res.render("newGoofspielGame", templateVars)
+
+  let GSNew = io.of("/goofspielNew")
+  GSNew.on('connection', function(socket) {
+    GSNew.emit('newJoin', "You've joined a game!");
+
+    socket.on('latestCard', function (from, msg) {
+      console.log(`the latest card ${msg} is from ${from}`)
+    })
+  })
+
+
+
+
 })
+
+
 
 
 
@@ -174,25 +208,6 @@ app.post("/goofspiel/newGameMove", function (req, res) {
 
 
 
-//   socket.on('disconnect')
-// })
 
 
 
-//Database Call
-
-
-
-
-
-
-
-
-
-
-
-
-
-server.listen(PORT, function() {
-  console.log(`Example app listening on port ${PORT}!`);
-});
