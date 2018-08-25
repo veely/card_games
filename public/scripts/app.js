@@ -34,7 +34,6 @@ $(document).ready(function() {
     username: $("#usernameText"),
     password: $("#passwordText")
     }
-
     $.post("/login", $loginInfo, function() {
     })
   })

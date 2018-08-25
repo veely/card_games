@@ -7,7 +7,7 @@ const prizeCards = [{'A': 1}, {'2': 2},{'3': 3}, {'4': 4}, {'5': 5}, {'6': 6}, {
 let score1 = 0;
 let score2 = 0;
 
-// variable for prize value (to be added to score)
+// variable for prize card
 let cardValue;
 
 // variable for number of opponent hand cards
@@ -127,29 +127,21 @@ function updateBoardState () {
 // when score on both sides add up to 91, game ends, player archive data is recorded, player wins is updated
 
 $(document).ready(function() {
-  newBoardState();
-
-
   const socket = io.connect('/goofspielNew');
+  newBoardState();
   socket.on('newJoin', function (data) {
-    console.log(data);
-    socket.emit('latestCard', "player", $cardValue);
-  });
-
-
     $(".card").click(function() {
       let $cardValue = ($(this).val());
       $(this).remove();
       updateBoardState();
-
-
-    $.ajax({
-      method: "POST",
-      url: "/goofspiel/newGameMove",
-      data: $cardValue
+      if ($cardValue) {
+        socket.emit('latestCard', "player", $cardValue);
+        console.log("your card value has been sent")
+      }
     })
+  });
 
-  })
+})
 
 
   // var socket = io.connect('http://localhost:8080');
@@ -158,7 +150,6 @@ $(document).ready(function() {
   //   socket.emit('gameBoard', "gamsession","hi, this is the game message");
   // });
 
-})
 
 
 
