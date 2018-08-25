@@ -10,21 +10,24 @@ $(() => {
 });
 
 
-const GS = io('/goofspiel');
+// const GS = io('/goofspiel');
 
 
-// game session ID is accessed through a cookie
-// connecting socket to the goofspiel namespace
-GS.on('connection', function(socket) {
-  socket.join('put in game session ID')
-  GS.to('put in game session ID').emit('game information on hands')
-})
+// // game session ID is accessed through a cookie
+// // connecting socket to the goofspiel namespace
+// GS.on('connection', function(socket) {
+//   socket.join('put in game session ID')
+//   GS.to('put in game session ID').emit('game information on hands')
+// })
 
 
 
 // header
 
 $(document).ready(function() {
+
+  // var draw = require('./test-cards');
+
   // header buttons
   $("#loginSubmit").click(function () {
     let $loginInfo = {
@@ -48,7 +51,15 @@ $(document).ready(function() {
     })
   })
 
-
+  $("#rank_1").click(function() {
+    drawCards(1).then( result => {
+    // do something after drawing card
+      console.log(result);
+    })
+    .catch(err => {
+      console.log("Error:", err);
+    });
+  })
 
 
 })

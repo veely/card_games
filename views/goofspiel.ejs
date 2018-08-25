@@ -11,7 +11,11 @@
 
     <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
 
-    <script type="text/javascript" src="/scripts/app.js"></script>
+    <script src="/scripts/app.js"></script>
+    <script src="/scripts/test-cards.js"></script>
+    <script src="/scripts/createDeck.js"></script>
+
+
   </head>
   <body>
     <header>
@@ -19,8 +23,9 @@
       <h1>Session Name</h1>
     </header>
     <main>
+      <div id="deck"><script>createDeck()</script></div>
       <section class="hands opponent-hand">
-        <button>Card 1</button>
+        <button id="rank_1">Card 1</button>
         <button>Card 2</button>
         <button>Card 3</button>
         <button>Card 4</button>

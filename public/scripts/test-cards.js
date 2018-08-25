@@ -12,14 +12,7 @@ const knex        = require("knex")(knexConfig[ENV]);
 const morgan      = require('morgan');
 const knexLogger  = require('knex-logger');
 
-const deck = require('./createDeck').deck;
-const drawIndex = 0;
-
-let playerOneHand = [];
-let playerTwoHand = [];
-
-function drawCards() {
-  console.log(drawIndex);
+function drawCards(drawIndex, deck) {
   return new Promise((resolve, reject) => {
     if (drawIndex < deck.length) {
       let num = playerOneHand.length;

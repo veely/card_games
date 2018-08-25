@@ -1,7 +1,17 @@
 "use strict";
 
+require('dotenv').config();
+
+const ENV         = process.env.ENV || "development";
+const express     = require("express");
+const sass        = require("node-sass-middleware");
+
+const knexConfig  = require("./knexfile");
+const knex        = require("knex")(knexConfig[ENV]);
+const morgan      = require('morgan');
+const knexLogger  = require('knex-logger');
+
 // required packages and modules
-const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const PORT = 8080;
@@ -9,7 +19,9 @@ const bodyParser = require("body-parser");
 
 const cookieSession = require("cookie-session");
 
-app.use(express.static('public'))
+  // var draw = require('./test-cards');
+
+app.use(express.static('public'));
 
 app.use(
   cookieSession({
