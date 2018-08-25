@@ -1,19 +1,23 @@
 "use strict";
 
 require('dotenv').config();
-// required packages and modules
+
 const ENV         = process.env.ENV || "development";
-const express = require('express');
+const express     = require("express");
+const sass        = require("node-sass-middleware");
+const knexConfig  = require("./knexfile");
+const knex        = require("knex")(knexConfig[ENV]);
+const morgan      = require('morgan');
+const knexLogger  = require('knex-logger');
 const app = express();
 const server = require('http').Server(app);
 const PORT        = process.env.PORT || 8080;
 const bodyParser = require("body-parser");
-const knexConfig  = require("./knexfile");
-const knex        = require("knex")(knexConfig[ENV]);
-
 const cookieSession = require("cookie-session");
+const draw = require('./public/scripts/draw_cards');
 
-app.use(express.static('public'))
+
+app.use(express.static('public'));
 
 app.use(
   cookieSession({
@@ -96,7 +100,18 @@ app.get("/games/goofspiel/:sessionID", function (req, res) {
   // }
 })
 
-
+app.post("/games/goofspiel/:sessionID", function (req, res) {
+  let deck = req.body.deck;
+  let playerOneHand = req.body.playerOneHand;
+  let drawIndex = req.body.drawIndex;
+  draw.drawCards(drawIndex, deck, playerOneHand).then( result => {
+    console.log(result);
+  })
+  .catch( err => {
+    console.log(err);
+  });
+  res.send(201);
+});
 
 app.post("/login", function (req, res) {
   const username = req.body.username;
@@ -121,9 +136,6 @@ app.post("/logout", function (req, res) {
 })
 
 
-
-
-
 // // namespaces of different games
 // const GS = io.of('/goofspiel')
 
@@ -144,26 +156,10 @@ app.post("/logout", function (req, res) {
 // GS.on('connection', function (socket) {
 //   console.log('socket username cookie person has connected')
 
-
-
 //   socket.on('disconnect')
 // })
 
-
-
 //Database Call
-
-
-
-
-
-
-
-
-
-
-
-
 
 server.listen(PORT, function() {
   console.log(`Example app listening on port ${PORT}!`);

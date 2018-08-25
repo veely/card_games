@@ -13,8 +13,6 @@ $(() => {
 
 
 // const GS = io('/goofspiel');
-
-
 // // game session ID is accessed through a cookie
 // // connecting socket to the goofspiel namespace
 // GS.on('connection', function(socket) {
@@ -22,11 +20,16 @@ $(() => {
 //   GS.to('put in game session ID').emit('game information on hands')
 // })
 
-
-
 // header
 
 $(document).ready(function() {
+
+  const cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+  const suits = ['diamonds', 'clubs', 'hearts', 'spades'];
+  const deck = (createDeck(cards, suits, shuffleDeck));
+  let drawIndex = 0;
+  let playerOneHand = [];
+
   // header buttons
   $("#loginSubmit").click(function () {
     console.log("okay cool")
@@ -51,7 +54,9 @@ $(document).ready(function() {
     })
   })
 
+  $("#rank_1").click(function() {
+    // $.post("/games/goofspiel/:sessionID", { drawIndex: drawIndex, deck: deck, playerOneHand: playerOneHand })
 
-
-
+    drawIndex++;
+  })
 })
