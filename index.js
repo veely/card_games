@@ -1,11 +1,15 @@
 "use strict";
 
+require('dotenv').config();
 // required packages and modules
+const ENV         = process.env.ENV || "development";
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);
-const PORT = 8080;
+const PORT        = process.env.PORT || 8080;
 const bodyParser = require("body-parser");
+const knexConfig  = require("./knexfile");
+const knex        = require("knex")(knexConfig[ENV]);
 
 const cookieSession = require("cookie-session");
 
@@ -61,6 +65,19 @@ app.get("/games/goofspiel", function (req, res) {
 })
 
 app.get("/games/goofspiel/:sessionID", function (req, res) {
+  knex.select('username', 'hand')
+    .from('players')
+    .where({
+      'session_id': req.params.sessionID
+    })
+    .asCallback(function(err, rows) {
+      console.log(rows);
+    })
+
+
+
+
+
   // req.session.sessionID = req.params.sessionID;
   const username = req.session.username
   let templateVars = {
@@ -86,6 +103,8 @@ app.post("/login", function (req, res) {
   const password = req.body.password;
   //check that the username and password are in the system
   req.session.username = username;
+  console.log("login worked");
+  res.redirect("/");
 })
 
 app.post("/register", function (req, res) {
@@ -129,6 +148,22 @@ app.post("/logout", function (req, res) {
 
 //   socket.on('disconnect')
 // })
+
+
+
+//Database Call
+
+
+
+
+
+
+
+
+
+
+
+
 
 server.listen(PORT, function() {
   console.log(`Example app listening on port ${PORT}!`);

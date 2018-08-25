@@ -1,3 +1,5 @@
+"use strict";
+
 $(() => {
   $.ajax({
     method: "GET",
@@ -10,15 +12,15 @@ $(() => {
 });
 
 
-const GS = io('/goofspiel');
+// const GS = io('/goofspiel');
 
 
-// game session ID is accessed through a cookie
-// connecting socket to the goofspiel namespace
-GS.on('connection', function(socket) {
-  socket.join('put in game session ID')
-  GS.to('put in game session ID').emit('game information on hands')
-})
+// // game session ID is accessed through a cookie
+// // connecting socket to the goofspiel namespace
+// GS.on('connection', function(socket) {
+//   socket.join('put in game session ID')
+//   GS.to('put in game session ID').emit('game information on hands')
+// })
 
 
 
@@ -27,6 +29,7 @@ GS.on('connection', function(socket) {
 $(document).ready(function() {
   // header buttons
   $("#loginSubmit").click(function () {
+    console.log("okay cool")
     let $loginInfo = {
     username: $("#usernameText"),
     password: $("#passwordText")
