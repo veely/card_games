@@ -216,9 +216,12 @@ $(document).ready(function() {
     if ((result[0].length !== 2) && (!checkPlayerInHandArray(result[0], username))) {
       // && (cardCount === myCardCount)
       $(".card").click(function() {
-        // if (cardCount === myCardCount) {
           let $cardValue = ($(this).val());
-          socket.emit('latestCard', username, $cardValue);
+          function latestCardSent () {
+            socket.emit('latestCard', username, $cardValue);
+            $(this).remove()
+          }
+          latestCardSent()
           resolveHands()
             .then(result => {
               $(this).remove();

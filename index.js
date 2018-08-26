@@ -1,7 +1,9 @@
 "use strict";
 
 require('dotenv').config();
+
 // required packages and modules
+
 
 const ENV             = process.env.ENV || "development";
 const express         = require('express');
@@ -14,14 +16,21 @@ const knexConfig      = require("./knexfile");
 const knex            = require("knex")(knexConfig[ENV]);
 const cookieSession   = require("cookie-session");
 
+const sass        = require("node-sass-middleware");
 
-server.listen(PORT, function() {
-  console.log(`Example app listening on port ${PORT}!`);
-});
+const morgan      = require('morgan');
+const knexLogger  = require('knex-logger');
 
 
 
-app.use(express.static('public'))
+
+
+
+const draw = require('./public/scripts/draw_cards');
+const login = require('./public/scripts/login');
+const register = require('./public/scripts/register');
+
+app.use(express.static('public'));
 
 app.use(
   cookieSession({
@@ -61,46 +70,130 @@ app.get("/players/:username", function (req, res) {
 app.get("/games/goofspiel", function (req, res) {
   req.session.username = 'vincent';
   let username = req.session.username
-  knex.select('session_id')
-    .from('players')
-    .where({
-      'username': username
-    })
-    .asCallback (function(err, rows){
-      for (let session of rows) {
-        let sessionLoad = session.session_id
-        knex.select('username', 'session_id')
+  // need to wrap this in another promise to find opponent username
+  function getMatchingSessions () {
+    return new Promise ((resolve, reject) => {
+        knex.select('session_id')
           .from('players')
           .where({
-            'session_id': sessionLoad
-          })
-          .whereNot ({
             'username': username
           })
-          .asCallback (function(err, rows) {
-            req.session.session_id = null
-            let templateVars = {
-              username: username,
-              opponentUsername: rows[0].username,
-              session_id: rows[0].session_id
+          .asCallback (function (err, rows) {
+            // console.log(rows)
+            let sessionIDArr = []
+            for (let eachInstance of rows) {
+              sessionIDArr.push(eachInstance.session_id);
             }
-            res.render("goofspielSessionList", templateVars)
-          });
-      }
-    });
-  // res.render("goofspielSessionList", templateVars)
-// may have to look into promises, error for not being able to set headers after they are sent
-});
-/////////CHECKOUT HERE
+            resolve (sessionIDArr)
+          })
 
-// io.on('connection', function (socket) {
-//   io.emit('server', "hi this is the server message");
 
-//   socket.on('gameBoard', function (from, msg) {
-//     console.log('I received a private message by ', from, ' saying ', msg);
-//   });
+    })
+  }
+  getMatchingSessions()
+    .then((result) => {
+      let sessionsArr = result;
+      console.log(sessionsArr, "sessionArr")
+      let opponentArr = []
+      // function populateOppArr () {
+      //   return new Promise ((resolve, reject) => {
+      //     for (let eachSession of sessionsArr) {
+      //       knex.select('username', 'session_id')
+      //         .from('players')
+      //         .where({
+      //           'session_id': eachSession
+      //         })
+      //         .whereNot({
+      //           'username': username
+      //         })
+      //         .asCallback (function (err, rows) {
+      //           for (let eachOpponent of rows) {
+      //             opponentArr.push(eachOpponent);
+      //           } if (opponentArr.length === sessionsArr.length) {
+      //             console.log(opponentArr, "f9na")
+      //           }
+      //         })
+      //     }
+      //   })
+      // }
+      // populateOppArr()
+      //   .then((result) => {
+      //     console.log(result);
+      //   })
+    })
 
+
+
+
+//   getPlayersMatchingSession()
+//     .then((result) => {
+// // result is array of session ID
+//       function()
+//       for (let eachSession of result) {
+//         knex.select('username', 'session_id')
+//           .from('players')
+//           .whereNOT({
+//             'username': username
+//           })
+//           .asCallback (function (err, rows) {
+//             console.log(rows, "these are the opponents")
+//           })
+//       }
+//     })
+
+
+
+      // let templateVars = {
+      //   username: username,
+      //   sessionIDRows: result,
+
+      // }
+  // function createTemplateVars () {
+  //   let playerInfoArray = getPlayersMatchingSession()
+  //   console.log(playerInfoArray, typeof playerInfoArray)
+  //   // for (let eachPlayer of playerInfoArray) {
+  //   //   console.log(eachPlayer.session_id)
+  //   // }
+  // }
+  // createTemplateVars()
+
+
+
+    // let templateVars = {
+    //   username: username,
+    //   opponentUsername: rowstuff[0].username,
+    //   session_id: rowstuff[0].session_id
+    // }
+    res.render("goofspielSessionList")
+    // , templateVars)
+})
+
+//     .asCallback (function(err, rows){
+//       for (let session of rows) {
+//         let sessionLoad = session.session_id
+//         knex.select('username', 'session_id')
+//           .from('players')
+//           .where({
+//             'session_id': sessionLoad
+//           })
+//           .whereNot ({
+//             'username': username
+//           })
+//           .asCallback (function(err, rows) {
+//             req.session.session_id = null
+//             let templateVars = {
+//               username: username,
+//               opponentUsername: rows[0].username,
+//               session_id: rows[0].session_id
+//             }
+//             res.render("goofspielSessionList", templateVars)
+//           });
+//       }
+//     });
+//   // res.render("goofspielSessionList", templateVars)
+// // may have to look into promises, error for not being able to set headers after they are sent
 // });
+
 
 
 function checkPlayerNotInHandArray (arr, username) {
@@ -131,8 +224,6 @@ function winningHandUser (arr) {
 }
 
 
-// fix so you can export the number of buttons for opponent's hand
-// compare that to th enumber of card buttons you have left, if they aren't equal, your click event doesnt' register
 app.get("/games/goofspiel/new", function (req, res) {
 
 
@@ -143,14 +234,15 @@ app.get("/games/goofspiel/new", function (req, res) {
   // let bothPlayersInfo = [['andrew', 2],['vincent1', 3]];
 
 
+
   // // you have played
   // let bothPlayersInfo = [['vincent1', 3]];
 
   // // opponent has played
-  let bothPlayersInfo = [['andrew', 3]];
+  // let bothPlayersInfo = [['andrew', 3]];
 
   // // no players have played
-  // let bothPlayersInfo = [];
+  let bothPlayersInfo = [];
 
   req.session.username = 'vincent1';
   req.session.sessionID = 3;
@@ -188,6 +280,7 @@ app.get("/games/goofspiel/new", function (req, res) {
       if (bothPlayersInfo.length === 2) {
         let winner = winningHandUser(result);
         if (winner === null) {
+          // deal with ties here
           GSNew.to(String(sessionID)).emit('resolvedHands', 0)
         } else {
           GSNew.to(String(sessionID)).emit('resolvedHands', winner)
@@ -232,22 +325,48 @@ app.get("/games/goofspiel/:sessionID", function (req, res) {
     })
 })
 
-
+app.post("/games/goofspiel/:sessionID", function (req, res) {
+  let deck = req.body.deck;
+  let playerOneHand = req.body.playerOneHand;
+  let drawIndex = req.body.drawIndex;
+  draw.drawCards(drawIndex, deck, playerOneHand).then( result => {
+    console.log(result);
+  });
+  // .catch( err => {
+  //   console.log(err);
+  // });
+  res.send(201);
+});
 
 app.post("/login", function (req, res) {
   const username = req.body.username;
-  const password = req.body.password;
+  const password = req.body.passwordLogin;
   //check that the username and password are in the system
-  req.session.username = username;
-  console.log("login worked");
-  res.redirect("/");
+  login.login(username, password).then( result => {
+    console.log(result);
+    req.session.username = username;
+    res.redirect("/");
+  })
+  .catch( err => {
+    console.log(err);
+    res.redirect("/");
+  });
+  // console.log("login worked");
 })
 
 app.post("/register", function (req, res) {
-  const username = req.body.username
-  // compare username to a list of database usernames, boolean if username exists
-  // req.session.username = username;
-  console.log("someone has registered", req.body)
+  const username = req.body.username;
+  const password = req.body.password;
+  //check that the username and password are in the system
+  register.register(username, password).then( result => {
+    console.log(result);
+    // req.session.username = username;
+    res.redirect("/");
+  })
+  .catch( err => {
+    console.log(err);
+    res.redirect("/");
+  });
 })
 
 app.post("/logout", function (req, res) {
@@ -255,9 +374,6 @@ app.post("/logout", function (req, res) {
   console.log("somebody logged out");
   res.redirect("/");
 })
-
-
-
 
 
 // // namespaces of different games
@@ -282,6 +398,7 @@ app.post("/logout", function (req, res) {
 
 
 
-
-
+server.listen(PORT, function() {
+  console.log(`Example app listening on port ${PORT}!`);
+});
 
