@@ -195,6 +195,7 @@ app.get("/games/goofspiel/new", function (req, res) {
       if (bothPlayersInfo.length === 2) {
         let winner = winningHandUser(result);
         if (winner === null) {
+          // deal with ties here
           GSNew.to(String(sessionID)).emit('resolvedHands', 0)
         } else {
           GSNew.to(String(sessionID)).emit('resolvedHands', winner)

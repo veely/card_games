@@ -47,6 +47,7 @@ $(document).ready(function() {
     })
   })
 
+})
 
   // header buttons
   // $("#loginSubmit").click(function () {
@@ -72,6 +73,3 @@ $(document).ready(function() {
   //   $.post("/register", $registerInfo, function() {
   //   })
   // })
-
-
-})
