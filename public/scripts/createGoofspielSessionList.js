@@ -1,6 +1,7 @@
 "use strict";
-
-const templateVars = JSON.parse(JSON.stringify($("#sessionData")));
+$(document).ready( function() {
+let templateVars = JSON.parse($("#sessionData").text());
+console.log("value: ", templateVars);
 let sessionData;
 function findSessionData () {
   for (let key in templateVars) {
@@ -12,6 +13,7 @@ function findSessionData () {
 findSessionData();
 
 console.log(sessionData);
+});
 // function createTableHTML () {
 //   let tableHTML =
 //     `<table>\n<tr>\n<th>Session</th>\n<th>Opponent</th>\n<th></th>\n</tr>`;
