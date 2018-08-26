@@ -1,51 +1,41 @@
 "use strict";
 
-const templateVars = JSON.parse(JSON.stringify($("#sessionData")));
-let sessionData;
-function findSessionData () {
-  for (let key in templateVars) {
-    if (key === "sessionData"){
-      sessionData = templateVars.key
-    }
+function createTableHTML (arr) {
+  let tableHTML = `
+      <table>
+        <tr>
+          <th>Session ID</th>
+          <th>Opponent Name</th>
+          <th>P1 is Host</th>
+          <th></th>
+        </tr>`
+  for (let match of arr) {
+    tableHTML += `
+        <tr>
+          <td>${match.session_id}</td>
+          <td>${match.username}</td>
+          <td>${!match.player_is_host}</td>
+          <td>
+            <button>Join Game</button>
+          </td>
+        </tr>
+    `
   }
+  tableHTML += "</table>"
+  return tableHTML
 }
-findSessionData();
 
-console.log(sessionData);
-// function createTableHTML () {
-//   let tableHTML =
-//     `<table>\n<tr>\n<th>Session</th>\n<th>Opponent</th>\n<th></th>\n</tr>`;
-//   console.log(username);
-//   return username
-// }
-
-// function renderTableHTML () {
-//   $('.sessionTable').append(createTableHTML)
-// }
-
-// renderTableHTML();
+function renderTableHTML (arr) {
+  $('.sessionTable').append(createTableHTML(arr))
+}
 
 
-      // <section class="sessionTable">
-      //   <table>
-      //     <tr>
-          //   <th>Session</th>
-          //   <th>Opponent</th>
-          //   <th></th>
-          // </tr>
-      //     <tr>
-      //       <td>1</td>
-      //       <td>Germany</td>
-      //       <td>
-      //         <button>Join Game</button>
-      //       </td>
-      //     </tr>
-      //     <tr>
-      //       <td>2</td>
-      //       <td>Mexico</td>
-      //       <td>
-      //         <button>Join Game</button>
-      //       </td>
-      //     </tr>
-      //   </table>
-      // </section>
+
+
+$(document).ready(function() {
+  const socket = io.connect("/sessionListGoofspiel")
+  socket.on('sessionData', function(data) {
+    console.log("data is here")
+    renderTableHTML(data);
+  })
+})

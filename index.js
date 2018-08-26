@@ -89,6 +89,9 @@ app.get("/games/goofspiel", function (req, res) {
       });
       knex.select('username', 'session_id', 'player_is_host')
       .from('players')
+      .whereNot({
+        'username': username
+      })
       .whereIn(
         'session_id', subquery
       )
@@ -98,17 +101,17 @@ app.get("/games/goofspiel", function (req, res) {
     })
   }
   getSessionData().then (result => {
+    const SLGS = io.of("/sessionListGoofspiel")
+    SLGS.once('connection', function(socket) {
+      socket.join(String(username));
+      SLGS.to(String(username)).emit('sessionData', result)
+    })
     let templateVars = {
       username: req.session.username,
-      sessionData: JSON.stringify(result)
     }
-    console.log(result)
     res.render("goofspielSessionList", templateVars)
   })
 })
-
-
-
 
 
 
@@ -140,10 +143,6 @@ function winningHandUser (arr) {
     return null;
   }
 }
-
-
-
-
 
 
 
