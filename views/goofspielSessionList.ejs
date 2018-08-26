@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <title>Goofspiel Games</title>
+    <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
+
+    <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
+
+    <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
+
+    <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
+
+    <script type="text/javascript" src="/scripts/app.js"></script>
+
+  </head>
+  <body>
+    <header>
+      <% include ./partials/_header %>
+    </header>
+    <h4>Your Games</h4>
+    <form method="GET" action="/games/goofspiel/new">
+      <input type="submit" value="Create Game" id="createButton">
+    </form>
+    <main>
+      <h3>List of Goofspiel Sessions </h3>
+      <section class="sessionTable">
+<!-- script for inserting tables -->
+      </section>
+    </main>
+  </body>
+</html>
+

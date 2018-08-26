@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>House of Cards</title>
+  <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
+
+  <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
+
+  <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
+
+  <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
+
+  <script type="text/javascript" src="/scripts/app.js"></script>
+</head>
+<body>
+
+    <% include ./partials/_header %>
+
+
+
+    <h2>Registration</h2>
+    <h3>Please fill out the information below to register</h3>
+
+    <form method="POST" action="/register">
+      <div>
+        <label for='fullName'>Name:</label>
+        <input type="text" name="fullName" id="fullNameReg" placeholder="enter Your Name">
+      </div>
+
+       <div>
+        <label for='birthDate'>Birthdate:</label>
+        <input type="date" name='birthDate' id="birthDateReg" placeholder="date of birth">
+      </div>
+
+
+      <div>
+        <label for='email'>Email: </label>
+        <input type="email" name="email" id="emailReg" placeholder="enter email">
+      </div>
+
+       <div>
+        <label for='username'>Username: </label>
+        <input type="email" name="username" id="usernameReg" placeholder="choose username">
+      </div>
+
+
+      <div>
+        <label for='password'>Password: </label>
+          <input type="password" name="password" id="passwordReg" placeholder="enter password">
+      </div>
+
+        <button type="submit" id="registerSubmit">Register</button>
+    </form>
+
+</body>
+</html>

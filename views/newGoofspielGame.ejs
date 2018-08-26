@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Game Page</title>
+
+    <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
+
+    <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
+
+    <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
+
+    <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
+
+    <script type="text/javascript" src="/scripts/app.js"></script>
+
+    <script type="text/javascript" src="/scripts/createGoofspielPlayBoard.js"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+
+  </head>
+  <body>
+    <h1 id="sessionUsername" style="display:none">
+      <%= username %>
+    </h1>
+    <h1 id="sessionSessionID" style="display:none">
+      <%= sessionID %>
+    </h1>
+    <h1 id="sessionBothPlayersInfo" style="display:none">
+      <%= bothPlayersInfo %>
+    </h1>
+    <header>
+    <%console.log(username)%>
+      <% include ./partials/_header %>
+      <h1>Session Name</h1>
+    </header>
+    <main>
+      <section class="hands oppHandContainer">
+<!-- script for creating opponent's hand -->
+
+      </section>
+      <section class="hands prizeHandContainer">
+<!-- script for creating prize hand -->
+      </section>
+      <section class="hands myHandContainer">
+        <form method="GET" action="/goofspiel/newGameMove">
+<!--  script for creating your hand  -->
+        </form>
+      </section>
+      <section class="scoreboardContainer">
+<!-- script for rendering scoreboard -->
+      </section>
+    </main>
+  </body>
+</html>

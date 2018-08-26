@@ -12,14 +12,41 @@ const knex        = require("knex")(knexConfig[ENV]);
 const morgan      = require('morgan');
 const knexLogger  = require('knex-logger');
 
-let deck = require('./public/scripts/createDeck');
-
+const deck = require('./public/scripts/createDeck').deck;
 let drawIndex = 0;
 
-knex.select()
-.from('game_sessions')
-.asCallback(function(err, rows){
-  if (err) return console.error(err);
-  console.log(rows);
-  knex.destroy();
+let playerOneHand = [];
+let playerTwoHand = [];
+
+function drawCards() {
+  return new Promise((resolve, reject) => {
+    if (drawIndex < deck.length) {
+      let num = playerOneHand.length;
+      knex.select()
+      .from('cards')
+      .where({
+        'rank': deck[drawIndex].rank,
+        'suit': deck[drawIndex].suit
+      })
+      .asCallback(function(err, rows){
+        if (err) return console.error(err);
+        playerOneHand.push(rows[0]);
+        drawIndex++;
+        knex.destroy();
+        resolve(true);
+      });
+    } else {
+      knex.destroy();
+      reject("No more cards in deck!");
+    }
+  });
+}
+
+drawCards().then( result => {
+  // do something after drawing card
+  console.log(playerOneHand);
+})
+.catch(err => {
+  console.log("Error:", err);
 });
+
