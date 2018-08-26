@@ -133,7 +133,24 @@ function winningHandUser (arr) {
 // fix so you can export the number of buttons for opponent's hand
 // compare that to th enumber of card buttons you have left, if they aren't equal, your click event doesnt' register
 app.get("/games/goofspiel/new", function (req, res) {
-  let bothPlayersInfo = [];
+
+
+
+  // // both players have played - not sure if this isn't working because hardcoded or because problem with
+  //clearing bothPlayersInfo
+
+  // let bothPlayersInfo = [['andrew', 2],['vincent1', 3]];
+
+
+  // // you have played
+  // let bothPlayersInfo = [['vincent1', 3]];
+
+  // // opponent has played
+  let bothPlayersInfo = [['andrew', 3]];
+
+  // // no players have played
+  // let bothPlayersInfo = [];
+
   req.session.username = 'vincent1';
   req.session.sessionID = 3;
   const username = req.session.username;
@@ -154,22 +171,34 @@ app.get("/games/goofspiel/new", function (req, res) {
         socket.on('latestCard', function (from, msg) {
           let playedCardValue = Number(msg);
           let username = from;
-          bothPlayersInfo.push([username, playedCardValue]);
+          if (checkPlayerNotInHandArray(bothPlayersInfo, username)) {
+            console.log(bothPlayersInfo, "arr", username)
+            bothPlayersInfo.push([username, playedCardValue]);
+          } else {
+            console.log("this player has already played his hand")
+          }
           console.log(bothPlayersInfo, "this is bothPlayersInfo");
           resolve(bothPlayersInfo);
         })
       })
     }
-    if (bothPlayersInfo.length === 2) {
-      processLatestCard().then((result) => {
+    processLatestCard().then((result) => {
+      console.log("latest card sent")
+      if (bothPlayersInfo.length === 2) {
         let winner = winningHandUser(result);
         if (winner === null) {
           GSNew.to(String(sessionID)).emit('resolvedHands', 0)
         } else {
           GSNew.to(String(sessionID)).emit('resolvedHands', winner)
         }
-      })
-    }
+      }
+    })
+    socket.on('clearPlayerInfo', function (from, msg) {
+      if (msg) {
+        bothPlayersInfo = []
+        console.log(bothPlayersInfo, "updated version")
+      }
+    })
   });
 })
 

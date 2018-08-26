@@ -1,9 +1,9 @@
 "use strict";
 
 const myHand = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
-const prizeCards = [{'A': 1}, {'2': 2},{'3': 3}, {'4': 4}, {'5': 5}, {'6': 6}, {'7': 7}, {'8': 8}, {'9': 9}, {'10': 10}, {'J': 11}, {'Q': 12}, {'K': 13}]
+const prizeCards = [['A', 1], ['2', 2], ['3', 3], ['4', 4], ['5', 5], ['6', 6], ['7', 7], ['8', 8], ['9', 9], ['10', 10], ['J', 11], ['Q', 12], ['K', 13]];
 
-
+let gamePrize = shuffleCards(prizeCards)
 
 
 // variables for scoreboard
@@ -13,6 +13,7 @@ let score2 = 0;
 // variable for prize card
 let cardValue;
 
+let clearMsg;
 // variable for number of hand cards
 let cardCount = 13
 let myCardCount = 13
@@ -72,12 +73,19 @@ function renderOppHand() {
 
 // functions for making prize cards
 
-let gamePrize = shuffleCards(prizeCards)
+
 
 function removeLastPrize () {
   if (gamePrize.length > 0) {
     gamePrize = gamePrize.slice(0, gamePrize.length - 1)
   } console.log(gamePrize)
+}
+
+function findLastPrize () {
+  if (gamePrize.length > 0) {
+    let lastPrizeArr =  gamePrize[gamePrize.length - 1]
+    return lastPrizeArr[1]
+  }
 }
 
 
@@ -88,11 +96,11 @@ function findKey (obj) {
 function createPrizeCard (arr) {
   if (arr.length !== 0) {
     let lastIndex = arr.length - 1
-    cardValue = Object.keys(arr)[lastIndex];
-    let cardObj = arr[lastIndex]
-    let cardText = findKey(cardObj)
+    let cardArr = arr[lastIndex]
+    let cardText = cardArr[0]
+    cardValue = cardArr[1]
     var prizeHTML = `<h1 class="new-prize-hand">${cardText}</h1>`;
-    console.log(cardObj)
+    console.log(cardArr)
     console.log(cardValue);
     console.log(cardText);
     return prizeHTML;
@@ -140,11 +148,15 @@ function updateBoardState () {
 // when score on both sides add up to 91, game ends, player archive data is recorded, player wins is updated
 
 function checkPlayerInHandArray (arr, username) {
-  for (let player of arr) {
-    if (username === player[0]) {
-      return true;
-    }
-  } return false;
+  if (arr === []) {
+    return false;
+  } else {
+    for (let player of arr) {
+      if (username === player[0]) {
+        return true;
+      }
+    } return false;
+  }
 }
 
 $(document).ready(function() {
@@ -163,50 +175,76 @@ $(document).ready(function() {
   });
   console.log(cardValue, "hi")
   function resolveHands() {
-    socket.on('resolvedHands', function(data) {
-      if (data === null) {
-        console.log('tie')
-        // program for  tie
-      } else {
-        function updateScore() {
-          if (data === username) {
-            console.log(score1, "cool")
-            score1 += Number(cardValue)
-          } else {
-            score2 += Number(cardValue)
-          }
-          $(".scoreboard").remove();
+    return new Promise ((resolve, reject) => {
+      socket.on('resolvedHands', function(data) {
+        if (data === null) {
+          console.log('tie')
+          // program for  tie
+          //
+          //
+        } else {
+          function updateScore() {
+            if (data === username) {
+              console.log(score1, "cool", cardValue)
+              score1 += findLastPrize()
+            } else {
+              score2 += findLastPrize()
+            }
+            $(".scoreboard").remove();
 
-          renderScoreBoard();
+            renderScoreBoard();
+          }
+          cardCount --
+          updateOppHand();
+          updateScore();
+          resolve("completed resolving")
         }
-        cardCount --
-        updateOppHand();
-        updateScore();
-      }
+      })
     })
   }
   function findarrLength () {
     return new Promise((resolve, reject) => {
       socket.on('playerInfo', function(data) {
         resolve(data)
+        console.log(data, 'playerInfo')
       })
     })
   }
   findarrLength().then((result) => {
     username = result[1]
-    if ((result[0].length < 2) && (!checkPlayerInHandArray(result[0], username)) && (cardCount === myCardCount)) {
+    console.log(result)
+    if ((result[0].length !== 2) && (!checkPlayerInHandArray(result[0], username))) {
+      // && (cardCount === myCardCount)
       $(".card").click(function() {
-        console.log("this is the current count", cardCount, myCardCount, (cardCount === myCardCount))
-        $(this).remove();
-        removeLastPrize();
-        updateBoardState();
-        renderPrizeCards();
-        let $cardValue = ($(this).val());
-        socket.emit('latestCard', username, $cardValue);
-        resolveHands();
-        console.log("your card value has been sent")
+        // if (cardCount === myCardCount) {
+          let $cardValue = ($(this).val());
+          socket.emit('latestCard', username, $cardValue);
+          resolveHands()
+            .then(result => {
+              $(this).remove();
+              removeLastPrize();
+              updateBoardState();
+              renderPrizeCards();
+              clearMsg = 1;
+              socket.emit('clearPlayerInfo', 'mod', clearMsg);
+            })
+            .catch(err => {
+              console.log(err)
+            })
+        // }
       })
-    } else {
+      // !!!!! see if you need this else if statement for dealing with arrays that are already full
+    // }
+    // else if (result[0].length === 2) {
+    //   $(".card").click(function() {
+    //     resolveHands()
+    //       .then(result =>) {
+    //         removeLastPrize();
+    //         updateBoardState
+    //       }
+    //   }
+    }
+    else {
       $(".card").click(function() {
         console.log("wait for your opponent");
       })
@@ -216,6 +254,12 @@ $(document).ready(function() {
     console.log(err);
   })
 });
+
+
+
+
+
+
 // data[0] is bothPlayersInfo [['andrew', 3],['vincent1', 2]]
 // data[1] is username
 
