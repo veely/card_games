@@ -2,7 +2,8 @@
 
 
 function createTableHTML () {
-  let tableHTML = `<table>\n<tr>\n<th>Session</th>\n<th>Opponent</th>\n<th></th>\n</tr>`;
+  let tableHTML =
+    `<table>\n<tr>\n<th>Session</th>\n<th>Opponent</th>\n<th></th>\n</tr>`;
   console.log(username);
   return username
 }

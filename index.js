@@ -67,34 +67,61 @@ app.get("/players/:username", function (req, res) {
   res.render("player-archive", templateVars)
 })
 
+/*
+card_games=# select * from players join game_sessions ON players.session_id = game_sessions.session_id;
+username  | session_id | player_is_host | hand | session_id | game_name
+----------+------------+----------------+------+------------+-----------
+*/
+
 app.get("/games/goofspiel", function (req, res) {
   req.session.username = 'vincent';
   let username = req.session.username
+  console.log("get working")
   // need to wrap this in another promise to find opponent username
-  function getMatchingSessions () {
+  // need to find - sessionIDs with the game name goofspiel that you are in
+  // opponent that you are facing
+  // are you the host or not
+  function getSessionData () {
     return new Promise ((resolve, reject) => {
-        knex.select('session_id')
-          .from('players')
-          .where({
-            'username': username
-          })
-          .asCallback (function (err, rows) {
-            // console.log(rows)
-            let sessionIDArr = []
-            for (let eachInstance of rows) {
-              sessionIDArr.push(eachInstance.session_id);
-            }
-            resolve (sessionIDArr)
-          })
-
-
+      knex('players')
+      .join('game_sessions', 'players.session_id', '=', 'game_sessions.session_id')
+      .select()
+      .where({
+        'username': username
+      })
+      .asCallback (function (err, rows) {
+        resolve(rows)
+      })
     })
   }
-  getMatchingSessions()
-    .then((result) => {
-      let sessionsArr = result;
-      console.log(sessionsArr, "sessionArr")
-      let opponentArr = []
+  getSessionData().then (result => {
+    console.log(result)
+  })
+
+  // function getMatchingSessions () {
+  //   return new Promise ((resolve, reject) => {
+  //       knex.select('session_id')
+  //         .from('players')
+  //         .where({
+  //           'username': username
+  //         })
+  //         .asCallback (function (err, rows) {
+  //           // console.log(rows)
+  //           let sessionIDArr = []
+  //           for (let eachInstance of rows) {
+  //             sessionIDArr.push(eachInstance.session_id);
+  //           }
+  //           resolve (sessionIDArr)
+  //         })
+
+
+  //   })
+  // }
+  // getMatchingSessions()
+  //   .then((result) => {
+  //     let sessionsArr = result;
+  //     console.log(sessionsArr, "sessionArr")
+  //     let opponentArr = []
       // function populateOppArr () {
       //   return new Promise ((resolve, reject) => {
       //     for (let eachSession of sessionsArr) {
@@ -120,7 +147,7 @@ app.get("/games/goofspiel", function (req, res) {
       //   .then((result) => {
       //     console.log(result);
       //   })
-    })
+    // })
 
 
 
