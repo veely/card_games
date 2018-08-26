@@ -3,6 +3,9 @@
 const myHand = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
 const prizeCards = [{'A': 1}, {'2': 2},{'3': 3}, {'4': 4}, {'5': 5}, {'6': 6}, {'7': 7}, {'8': 8}, {'9': 9}, {'10': 10}, {'J': 11}, {'Q': 12}, {'K': 13}]
 
+
+
+
 // variables for scoreboard
 let score1 = 0;
 let score2 = 0;
@@ -10,8 +13,9 @@ let score2 = 0;
 // variable for prize card
 let cardValue;
 
-// variable for number of opponent hand cards
+// variable for number of hand cards
 let cardCount = 13
+let myCardCount = 13
 
 // function that randomly shuffles an array of playing cards
 function shuffleCards (arr) {
@@ -39,19 +43,19 @@ function createOpponentHand () {
 
 function createMyHand () {
   let myHandCode = `
-  <button type="submit" class='card card1' value="1">A</button>
-  <button type="submit" class='card card1' value="2">2</button>
-  <button type="submit" class='card card1' value="3">3</button>
-  <button type="submit" class='card card1' value="4">4</button>
-  <button type="submit" class='card card1' value="5">5</button>
-  <button type="submit" class='card card1' value="6">6</button>
-  <button type="submit" class='card card1' value="7">7</button>
-  <button type="submit" class='card card1' value="8">8</button>
-  <button type="submit" class='card card1' value="9">9</button>
-  <button type="submit" class='card card1' value="10">10</button>
-  <button type="submit" class='card card1' value="11">J</button>
-  <button type="submit" class='card card1' value="12">Q</button>
-  <button type="submit" class='card card1' value="13">K</button>
+  <button type="submit" class='card' value="1">A</button>
+  <button type="submit" class='card' value="2">2</button>
+  <button type="submit" class='card' value="3">3</button>
+  <button type="submit" class='card' value="4">4</button>
+  <button type="submit" class='card' value="5">5</button>
+  <button type="submit" class='card' value="6">6</button>
+  <button type="submit" class='card' value="7">7</button>
+  <button type="submit" class='card' value="8">8</button>
+  <button type="submit" class='card' value="9">9</button>
+  <button type="submit" class='card' value="10">10</button>
+  <button type="submit" class='card' value="11">J</button>
+  <button type="submit" class='card' value="12">Q</button>
+  <button type="submit" class='card' value="13">K</button>
   `;
   return myHandCode
 }
@@ -70,20 +74,27 @@ function renderOppHand() {
 
 let gamePrize = shuffleCards(prizeCards)
 
-function getNextPrize (arr) {
-  if (arr) {
-    return arr.pop();
-  } else {
-    return null
-  }
+function removeLastPrize () {
+  if (gamePrize.length > 0) {
+    gamePrize = gamePrize.slice(0, gamePrize.length - 1)
+  } console.log(gamePrize)
+}
+
+
+function findKey (obj) {
+  return Object.keys(obj)[0]
 }
 
 function createPrizeCard (arr) {
   if (arr.length !== 0) {
-    let nextPrize = getNextPrize(arr);
-    let cardText = (Object.keys(nextPrize))[0];
-    cardValue = nextPrize[cardText]
+    let lastIndex = arr.length - 1
+    cardValue = Object.keys(arr)[lastIndex];
+    let cardObj = arr[lastIndex]
+    let cardText = findKey(cardObj)
     var prizeHTML = `<h1 class="new-prize-hand">${cardText}</h1>`;
+    console.log(cardObj)
+    console.log(cardValue);
+    console.log(cardText);
     return prizeHTML;
   } else {
     return "";
@@ -111,35 +122,122 @@ function newBoardState () {
   renderPrizeCards();
 }
 
-function updateBoardState () {
-  score1 += Number(cardValue)
+// update board after comparing hands
+function updateOppHand() {
   cardCount -- ;
-  $(".new-prize-hand").remove();
-  $(".scoreboard").remove();
   $(".oppHand").remove();
-  renderPrizeCards()
-  renderScoreBoard();
   renderOppHand();
+}
+
+
+function updateBoardState () {
+  $(".new-prize-hand").remove();
+  renderPrizeCards;
 }
 
 // add conditional for comparing cardvalue to p2 before adding score
 // make a database for recording player archive data (who y)
 // when score on both sides add up to 91, game ends, player archive data is recorded, player wins is updated
 
+function checkPlayerInHandArray (arr, username) {
+  for (let player of arr) {
+    if (username === player[0]) {
+      return true;
+    }
+  } return false;
+}
+
 $(document).ready(function() {
+  function changeMyHand () {
+    myCardCount --;
+  }
+  // const $bothPlayersInfo = $("#sessionBothPlayersInfo")
+  // const $username = $("#sessionUsername")
+  // console.log(($bothPlayersInfo).split(','))
+  // console.log(typeof $username)
+  let username;
   const socket = io.connect('/goofspielNew');
   newBoardState();
   socket.on('newJoin', function (data) {
     console.log(data);
-    $(".card").click(function() {
-      let $cardValue = ($(this).val());
-      $(this).remove();
-      updateBoardState();
-      socket.emit('latestCard', "player", $cardValue);
-      console.log("your card value has been sent")
+  });
+  console.log(cardValue, "hi")
+  function resolveHands() {
+    socket.on('resolvedHands', function(data) {
+      if (data === null) {
+        console.log('tie')
+        // program for  tie
+      } else {
+        function updateScore() {
+          if (data === username) {
+            console.log(score1, "cool")
+            score1 += Number(cardValue)
+          } else {
+            score2 += Number(cardValue)
+          }
+          $(".scoreboard").remove();
+
+          renderScoreBoard();
+        }
+        cardCount --
+        updateOppHand();
+        updateScore();
+      }
+    })
+  }
+  function findarrLength () {
+    return new Promise((resolve, reject) => {
+      socket.on('playerInfo', function(data) {
+        resolve(data)
       })
     })
+  }
+  findarrLength().then((result) => {
+    username = result[1]
+    if ((result[0].length < 2) && (!checkPlayerInHandArray(result[0], username)) && (cardCount === myCardCount)) {
+      $(".card").click(function() {
+        console.log("this is the current count", cardCount, myCardCount, (cardCount === myCardCount))
+        $(this).remove();
+        removeLastPrize();
+        updateBoardState();
+        renderPrizeCards();
+        let $cardValue = ($(this).val());
+        socket.emit('latestCard', username, $cardValue);
+        resolveHands();
+        console.log("your card value has been sent")
+      })
+    } else {
+      $(".card").click(function() {
+        console.log("wait for your opponent");
+      })
+    }
+  })
+   .catch((err) => {
+    console.log(err);
+  })
 });
+// data[0] is bothPlayersInfo [['andrew', 3],['vincent1', 2]]
+// data[1] is username
+
+  //   if (result[0] !== 2 && )
+
+  //    {
+  //     $(".card").click(function() {
+  //       $(this).remove();
+  //       let $cardValue = ($(this).val());
+  //       updateBoardState();
+  //       socket.emit('latestCard', "player", $cardValue);
+  //       console.log("your card value has been sent")
+  //     })
+  //   } else {
+  //     console.log("wait for your opponent")
+  //   }
+
+  // if ($bothPlayersInfo.length < 2 && !checkPlayerInHandArray($bothPlayersInfo, $username)) {
+  // } else {
+  //   console.log("wait for your opponent")
+  // }
+
 
 
 

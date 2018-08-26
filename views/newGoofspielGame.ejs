@@ -18,10 +18,17 @@
     <script src="/socket.io/socket.io.js"></script>
 
 
-
-
   </head>
   <body>
+    <h1 id="sessionUsername" style="display:none">
+      <%= username %>
+    </h1>
+    <h1 id="sessionSessionID" style="display:none">
+      <%= sessionID %>
+    </h1>
+    <h1 id="sessionBothPlayersInfo" style="display:none">
+      <%= bothPlayersInfo %>
+    </h1>
     <header>
     <%console.log(username)%>
       <% include ./partials/_header %>
@@ -36,7 +43,7 @@
 <!-- script for creating prize hand -->
       </section>
       <section class="hands myHandContainer">
-        <form method="POST" action="/goofspiel/newGameMove">
+        <form method="GET" action="/goofspiel/newGameMove">
 <!--  script for creating your hand  -->
         </form>
       </section>

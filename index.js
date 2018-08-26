@@ -102,38 +102,84 @@ app.get("/games/goofspiel", function (req, res) {
 // });
 
 
+function checkPlayerNotInHandArray (arr, username) {
+  for (let player of arr) {
+    if (username === player[0]) {
+      return false;
+    }
+  } return true;
+}
+
+function arrLengthChecker (arr) {
+  if (arr.length < 2) {
+    return true
+  } else {
+    return false;
+  }
+}
+
+// bothPlayersInfo = [['andrew', 3],['vincent1', 2]];
+function winningHandUser (arr) {
+  if ((arr[0])[1] > (arr[1])[1]) {
+    return ((arr[0])[0]);
+  } else if ((arr[0])[1] < (arr[1][1])) {
+    return ((arr[1])[0]);
+  } else {
+    return null;
+  }
+}
 
 
+// fix so you can export the number of buttons for opponent's hand
+// compare that to th enumber of card buttons you have left, if they aren't equal, your click event doesnt' register
 app.get("/games/goofspiel/new", function (req, res) {
-  req.session.username = 'vincent';
-  req.session.sessionID = 3
+  let bothPlayersInfo = [];
+  req.session.username = 'vincent1';
+  req.session.sessionID = 3;
+  const username = req.session.username;
+  const sessionID = req.session.sessionID;
   let templateVars = {
     username: req.session.username,
-    sessionID: req.session.sessionID
+    sessionID: req.session.sessionID,
+    bothPlayersInfo: bothPlayersInfo
   }
   res.render("newGoofspielGame", templateVars)
-
-  let GSNew = io.of("/goofspielNew")
+  const GSNew = io.of("/goofspielNew")
   GSNew.once('connection', function(socket) {
-    GSNew.emit('newJoin', "You've joined a game!");
-
-    socket.on('latestCard', function (from, msg) {
-      console.log(`the latest card ${msg} is from ${from}`)
-    })
-  })
-
-
-
-
+    socket.join(String(sessionID));
+    GSNew.to(String(sessionID)).emit('newJoin', "You've joined a game!");
+    GSNew.to(String(sessionID)).emit('playerInfo', [bothPlayersInfo, username])
+    function processLatestCard () {
+      return new Promise ((resolve, reject) => {
+        socket.on('latestCard', function (from, msg) {
+          let playedCardValue = Number(msg);
+          let username = from;
+          bothPlayersInfo.push([username, playedCardValue]);
+          console.log(bothPlayersInfo, "this is bothPlayersInfo");
+          resolve(bothPlayersInfo);
+        })
+      })
+    }
+    if (bothPlayersInfo.length === 2) {
+      processLatestCard().then((result) => {
+        let winner = winningHandUser(result);
+        if (winner === null) {
+          GSNew.to(String(sessionID)).emit('resolvedHands', 0)
+        } else {
+          GSNew.to(String(sessionID)).emit('resolvedHands', winner)
+        }
+      })
+    }
+  });
 })
-
-
 
 
 
 app.get("/games/goofspiel/:sessionID", function (req, res) {
   req.session.sessionID = req.params.sessionID;
   req.session.username = 'vincent'
+  let sessionID = req.session.sessionID;
+  let username = req.session.username;
   knex.select('username', 'hand')
     .from('players')
     .where({
@@ -147,8 +193,8 @@ app.get("/games/goofspiel/:sessionID", function (req, res) {
       }
       let templateVars = {
         currentHand: currentHand,
-        username: req.session.username,
-        sessionID: req.session.sessionID
+        username: username,
+        sessionID: sessionID
       }
       res.render("goofspiel", templateVars);
       console.log(currentHand);
@@ -180,9 +226,7 @@ app.post("/logout", function (req, res) {
   res.redirect("/");
 })
 
-app.post("/goofspiel/newGameMove", function (req, res) {
-  let cardPlayed = Object.keys(req.body)[0];
-})
+
 
 
 
