@@ -22,7 +22,6 @@ server.listen(PORT, function() {
 
 
 app.use(express.static('public'))
->>>>>>> features-andrew
 
 app.use(
   cookieSession({
