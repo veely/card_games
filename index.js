@@ -1,7 +1,7 @@
 "use strict";
 
 require('dotenv').config();
-// required packages and modules
+
 const ENV             = process.env.ENV || "development";
 const express         = require('express');
 const app             = express();
@@ -13,14 +13,21 @@ const knexConfig      = require("./knexfile");
 const knex            = require("knex")(knexConfig[ENV]);
 const cookieSession   = require("cookie-session");
 
+const sass        = require("node-sass-middleware");
 
-server.listen(PORT, function() {
-  console.log(`Example app listening on port ${PORT}!`);
-});
+const morgan      = require('morgan');
+const knexLogger  = require('knex-logger');
 
 
 
-app.use(express.static('public'))
+
+
+
+const draw = require('./public/scripts/draw_cards');
+const login = require('./public/scripts/login');
+const register = require('./public/scripts/register');
+
+app.use(express.static('public'));
 
 app.use(
   cookieSession({
@@ -142,6 +149,7 @@ app.get("/games/goofspiel/new", function (req, res) {
   // let bothPlayersInfo = [['andrew', 2],['vincent1', 3]];
 
 
+
   // // you have played
   // let bothPlayersInfo = [['vincent1', 3]];
 
@@ -231,22 +239,48 @@ app.get("/games/goofspiel/:sessionID", function (req, res) {
     })
 })
 
-
+app.post("/games/goofspiel/:sessionID", function (req, res) {
+  let deck = req.body.deck;
+  let playerOneHand = req.body.playerOneHand;
+  let drawIndex = req.body.drawIndex;
+  draw.drawCards(drawIndex, deck, playerOneHand).then( result => {
+    console.log(result);
+  });
+  // .catch( err => {
+  //   console.log(err);
+  // });
+  res.send(201);
+});
 
 app.post("/login", function (req, res) {
   const username = req.body.username;
-  const password = req.body.password;
+  const password = req.body.passwordLogin;
   //check that the username and password are in the system
-  req.session.username = username;
-  console.log("login worked");
-  res.redirect("/");
+  login.login(username, password).then( result => {
+    console.log(result);
+    req.session.username = username;
+    res.redirect("/");
+  })
+  .catch( err => {
+    console.log(err);
+    res.redirect("/");
+  });
+  // console.log("login worked");
 })
 
 app.post("/register", function (req, res) {
-  const username = req.body.username
-  // compare username to a list of database usernames, boolean if username exists
-  // req.session.username = username;
-  console.log("someone has registered", req.body)
+  const username = req.body.username;
+  const password = req.body.password;
+  //check that the username and password are in the system
+  register.register(username, password).then( result => {
+    console.log(result);
+    // req.session.username = username;
+    res.redirect("/");
+  })
+  .catch( err => {
+    console.log(err);
+    res.redirect("/");
+  });
 })
 
 app.post("/logout", function (req, res) {
@@ -254,9 +288,6 @@ app.post("/logout", function (req, res) {
   console.log("somebody logged out");
   res.redirect("/");
 })
-
-
-
 
 
 // // namespaces of different games
@@ -281,6 +312,7 @@ app.post("/logout", function (req, res) {
 
 
 
-
-
+server.listen(PORT, function() {
+  console.log(`Example app listening on port ${PORT}!`);
+});
 
