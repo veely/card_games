@@ -1,27 +1,38 @@
 "use strict";
 
-
-function createTableHTML () {
-  let tableHTML =
-    `<table>\n<tr>\n<th>Session</th>\n<th>Opponent</th>\n<th></th>\n</tr>`;
-  console.log(username);
-  return username
+const templateVars = JSON.parse(JSON.stringify($("#sessionData")));
+let sessionData;
+function findSessionData () {
+  for (let key in templateVars) {
+    if (key === "sessionData"){
+      sessionData = templateVars.key
+    }
+  }
 }
+findSessionData();
 
-function renderTableHTML () {
-  $('.sessionTable').append(createTableHTML)
-}
+console.log(sessionData);
+// function createTableHTML () {
+//   let tableHTML =
+//     `<table>\n<tr>\n<th>Session</th>\n<th>Opponent</th>\n<th></th>\n</tr>`;
+//   console.log(username);
+//   return username
+// }
 
-renderTableHTML();
+// function renderTableHTML () {
+//   $('.sessionTable').append(createTableHTML)
+// }
+
+// renderTableHTML();
 
 
       // <section class="sessionTable">
       //   <table>
       //     <tr>
-            <th>Session</th>
-            <th>Opponent</th>
-            <th></th>
-          </tr>
+          //   <th>Session</th>
+          //   <th>Opponent</th>
+          //   <th></th>
+          // </tr>
       //     <tr>
       //       <td>1</td>
       //       <td>Germany</td>

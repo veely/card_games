@@ -67,11 +67,8 @@ app.get("/players/:username", function (req, res) {
   res.render("player-archive", templateVars)
 })
 
-/*
-card_games=# select * from players join game_sessions ON players.session_id = game_sessions.session_id;
-username  | session_id | player_is_host | hand | session_id | game_name
-----------+------------+----------------+------+------------+-----------
-*/
+
+
 
 app.get("/games/goofspiel", function (req, res) {
   req.session.username = 'vincent';
@@ -81,145 +78,39 @@ app.get("/games/goofspiel", function (req, res) {
   // need to find - sessionIDs with the game name goofspiel that you are in
   // opponent that you are facing
   // are you the host or not
-  function getSessionData () {
+  function getSessionData() {
     return new Promise ((resolve, reject) => {
-      knex('players')
+      let subquery = knex('players')
       .join('game_sessions', 'players.session_id', '=', 'game_sessions.session_id')
-      .select()
+      .select('game_sessions.session_id')
       .where({
-        'username': username
-      })
-      .asCallback (function (err, rows) {
+        'username': username,
+        'game_name': 'goofspiel'
+      });
+      knex.select('username', 'session_id', 'player_is_host')
+      .from('players')
+      .whereIn(
+        'session_id', subquery
+      )
+      .asCallback ((err, rows) => {
         resolve(rows)
       })
     })
   }
   getSessionData().then (result => {
+    let templateVars = {
+      username: req.session.username,
+      sessionData: JSON.stringify(result)
+    }
     console.log(result)
+    res.render("goofspielSessionList", templateVars)
   })
-
-  // function getMatchingSessions () {
-  //   return new Promise ((resolve, reject) => {
-  //       knex.select('session_id')
-  //         .from('players')
-  //         .where({
-  //           'username': username
-  //         })
-  //         .asCallback (function (err, rows) {
-  //           // console.log(rows)
-  //           let sessionIDArr = []
-  //           for (let eachInstance of rows) {
-  //             sessionIDArr.push(eachInstance.session_id);
-  //           }
-  //           resolve (sessionIDArr)
-  //         })
-
-
-  //   })
-  // }
-  // getMatchingSessions()
-  //   .then((result) => {
-  //     let sessionsArr = result;
-  //     console.log(sessionsArr, "sessionArr")
-  //     let opponentArr = []
-      // function populateOppArr () {
-      //   return new Promise ((resolve, reject) => {
-      //     for (let eachSession of sessionsArr) {
-      //       knex.select('username', 'session_id')
-      //         .from('players')
-      //         .where({
-      //           'session_id': eachSession
-      //         })
-      //         .whereNot({
-      //           'username': username
-      //         })
-      //         .asCallback (function (err, rows) {
-      //           for (let eachOpponent of rows) {
-      //             opponentArr.push(eachOpponent);
-      //           } if (opponentArr.length === sessionsArr.length) {
-      //             console.log(opponentArr, "f9na")
-      //           }
-      //         })
-      //     }
-      //   })
-      // }
-      // populateOppArr()
-      //   .then((result) => {
-      //     console.log(result);
-      //   })
-    // })
-
-
-
-
-//   getPlayersMatchingSession()
-//     .then((result) => {
-// // result is array of session ID
-//       function()
-//       for (let eachSession of result) {
-//         knex.select('username', 'session_id')
-//           .from('players')
-//           .whereNOT({
-//             'username': username
-//           })
-//           .asCallback (function (err, rows) {
-//             console.log(rows, "these are the opponents")
-//           })
-//       }
-//     })
-
-
-
-      // let templateVars = {
-      //   username: username,
-      //   sessionIDRows: result,
-
-      // }
-  // function createTemplateVars () {
-  //   let playerInfoArray = getPlayersMatchingSession()
-  //   console.log(playerInfoArray, typeof playerInfoArray)
-  //   // for (let eachPlayer of playerInfoArray) {
-  //   //   console.log(eachPlayer.session_id)
-  //   // }
-  // }
-  // createTemplateVars()
-
-
-
-    // let templateVars = {
-    //   username: username,
-    //   opponentUsername: rowstuff[0].username,
-    //   session_id: rowstuff[0].session_id
-    // }
-    res.render("goofspielSessionList")
-    // , templateVars)
 })
 
-//     .asCallback (function(err, rows){
-//       for (let session of rows) {
-//         let sessionLoad = session.session_id
-//         knex.select('username', 'session_id')
-//           .from('players')
-//           .where({
-//             'session_id': sessionLoad
-//           })
-//           .whereNot ({
-//             'username': username
-//           })
-//           .asCallback (function(err, rows) {
-//             req.session.session_id = null
-//             let templateVars = {
-//               username: username,
-//               opponentUsername: rows[0].username,
-//               session_id: rows[0].session_id
-//             }
-//             res.render("goofspielSessionList", templateVars)
-//           });
-//       }
-//     });
-//   // res.render("goofspielSessionList", templateVars)
-// // may have to look into promises, error for not being able to set headers after they are sent
-// });
+
+
+
+
 
 
 
@@ -249,6 +140,11 @@ function winningHandUser (arr) {
     return null;
   }
 }
+
+
+
+
+
 
 
 app.get("/games/goofspiel/new", function (req, res) {

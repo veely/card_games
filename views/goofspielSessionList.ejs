@@ -12,8 +12,13 @@
 
     <script type="text/javascript" src="/scripts/app.js"></script>
 
+    <script type="text/javascript" src="/scripts/createGoofspielSessionList.js"></script>
+
   </head>
   <body>
+    <section class="hidden">
+      <h1 id="sessionData" style="display:none"><%= sessionData%></h1>
+    </section>
     <header>
       <% include ./partials/_header %>
     </header>
@@ -26,6 +31,7 @@
       <section class="sessionTable">
 <!-- script for inserting tables -->
       </section>
+
     </main>
   </body>
 </html>
