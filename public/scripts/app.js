@@ -24,39 +24,29 @@ $(() => {
 
 $(document).ready(function() {
 
-  const cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-  const suits = ['diamonds', 'clubs', 'hearts', 'spades'];
-  const deck = (createDeck(cards, suits, shuffleDeck));
-  let drawIndex = 0;
-  let playerOneHand = [];
-
   // header buttons
-  $("#loginSubmit").click(function () {
-    console.log("okay cool")
-    let $loginInfo = {
-    username: $("#usernameText"),
-    password: $("#passwordText")
-    }
+  // $("#loginSubmit").click(function () {
+  //   console.log("okay cool")
+  //   let $loginInfo = {
+  //   username: $("#usernameText"),
+  //   password: $("#passwordText")
+  //   }
+  //   console.log($loginInfo.password);
 
-    $.post("/login", $loginInfo, function() {
-    })
-  })
+  //   $.post("/login", $loginInfo, function() {
+  //   })
+  // })
 
-  $("#registerSubmit").click(function() {
-    let $registerInfo = {
-      name: $("#fullNameReg"),
-      birthdate: $("birthDateReg"),
-      email: $("emailReg"),
-      username: $("usernameReg"),
-      password: $("passwordReg")
-    }
-    $.post("/register", $registerInfo, function() {
-    })
-  })
+  // $("#registerSubmit").click(function() {
+  //   let $registerInfo = {
+  //     name: $("#fullNameReg"),
+  //     birthdate: $("birthDateReg"),
+  //     email: $("emailReg"),
+  //     username: $("usernameReg"),
+  //     password: $("passwordReg")
+  //   }
+  //   $.post("/register", $registerInfo, function() {
+  //   })
+  // })
 
-  $("#rank_1").click(function() {
-    // $.post("/games/goofspiel/:sessionID", { drawIndex: drawIndex, deck: deck, playerOneHand: playerOneHand })
-
-    drawIndex++;
-  })
 })
