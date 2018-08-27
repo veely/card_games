@@ -33,30 +33,45 @@ function shuffleCards (arr) {
 // functions for creating hands
 
 function createOpponentHand () {
-  let oppHandCode = `<div class="oppHand">`
-  for (let count = 0; count < cardCount; count ++) {
-    oppHandCode += `<button class="card">Card</button>\n`
-  };
-  oppHandCode += "</div>";
+  // let oppHandCode = `<div class="oppHand">`
+  // for (let count = 0; count < cardCount; count ++) {
+  //   oppHandCode += `<button class="card">Card</button>\n`
+  // };
+  // oppHandCode += "</div>";
+  let oppHandCode = `
+  <button id="ace2" class="card" value="1"></button>
+  <button id="two2" class="card" value="2"></button>
+  <button id="three2" class="card" value="3"></button>
+  <button id="four2" class="card" value="4"></button>
+  <button id="five2" class="card" value="5"></button>
+  <button id="six2" class="card" value="6"></button>
+  <button id="seven2" class="card" value="7"></button>
+  <button id="eight2" class="card" value="8"></button>
+  <button id="nine2" class="card" value="9"></button>
+  <button id="ten2" class="card" value="10"></button>
+  <button id="jack2" class="card" value="11"></button>
+  <button id="queen2" class="card" value="12"></button>
+  <button id="king2" class="card" value="13"></button>
+  `;
   return oppHandCode;
 };
 
 
 function createMyHand () {
   let myHandCode = `
-  <button type="submit" class='card' value="1">A</button>
-  <button type="submit" class='card' value="2">2</button>
-  <button type="submit" class='card' value="3">3</button>
-  <button type="submit" class='card' value="4">4</button>
-  <button type="submit" class='card' value="5">5</button>
-  <button type="submit" class='card' value="6">6</button>
-  <button type="submit" class='card' value="7">7</button>
-  <button type="submit" class='card' value="8">8</button>
-  <button type="submit" class='card' value="9">9</button>
-  <button type="submit" class='card' value="10">10</button>
-  <button type="submit" class='card' value="11">J</button>
-  <button type="submit" class='card' value="12">Q</button>
-  <button type="submit" class='card' value="13">K</button>
+  <button id="ace1" class="card" value="1"></button>
+  <button id="two1" class="card" value="2"></button>
+  <button id="three1" class="card" value="3"></button>
+  <button id="four1" class="card" value="4"></button>
+  <button id="five1" class="card" value="5"></button>
+  <button id="six1" class="card" value="6"></button>
+  <button id="seven1" class="card" value="7"></button>
+  <button id="eight1" class="card" value="8"></button>
+  <button id="nine1" class="card" value="9"></button>
+  <button id="ten1" class="card" value="10"></button>
+  <button id="jack1" class="card" value="11"></button>
+  <button id="queen1" class="card" value="12"></button>
+  <button id="king1" class="card" value="13"></button>
   `;
   return myHandCode
 }

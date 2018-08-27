@@ -162,10 +162,10 @@ app.get("/games/goofspiel/new", function (req, res) {
   // let bothPlayersInfo = [['vincent1', 3]];
 
   // // opponent has played
-  // let bothPlayersInfo = [['andrew', 3]];
+  let bothPlayersInfo = [['andrew', 3]];
 
   // // no players have played
-  let bothPlayersInfo = [];
+  // let bothPlayersInfo = [];
 
   req.session.username = 'vincent1';
   req.session.sessionID = 3;
