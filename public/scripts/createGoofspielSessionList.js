@@ -16,7 +16,9 @@ function createTableHTML (arr) {
           <td class="sessionTableCell">${match.username}</td>
           <td class="sessionTableCell">${!match.player_is_host}</td>
           <td class="sessionTableCell">
-            <button>Join Game</button>
+            <form method="GET" action="/games/goofspiel/${match.session_id}">
+              <button type="submit value="${match.session_id}">Join Game</button>
+            </form>
           </td>
         </tr>
     `

@@ -99,7 +99,7 @@ function createPrizeCard (arr) {
     let cardArr = arr[lastIndex]
     let cardText = cardArr[0]
     cardValue = cardArr[1]
-    var prizeHTML = `<h1 class="new-prize-hand">${cardText}</h1>`;
+    var prizeHTML = `<h1 class="new-prize-hand sessionHeader">Next Prize Card is ${cardText}</h1>`;
     console.log(cardArr)
     console.log(cardValue);
     console.log(cardText);
@@ -118,7 +118,7 @@ function renderPrizeCards() {
 // functions for scoring
 
 function renderScoreBoard() {
-  let $scoreString = `<h1 class="scoreboard">Score: ${score1}:${score2}</h1>`;
+  let $scoreString = `<h1 class="scoreboard sessionHeader">Score is currently P1 ${score1} : P2 ${score2}</h1>`;
   $('.scoreboardContainer').append($scoreString);
 }
 
@@ -132,7 +132,7 @@ function newBoardState () {
 
 // update board after comparing hands
 function updateOppHand() {
-  cardCount -- ;
+  cardCount --
   $(".oppHand").remove();
   renderOppHand();
 }
@@ -195,8 +195,8 @@ $(document).ready(function() {
 
             renderScoreBoard();
           }
-          cardCount --
           updateOppHand();
+          cardCount --
           updateScore();
           resolve("completed resolving")
         }

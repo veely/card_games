@@ -70,10 +70,10 @@ app.get("/", function (req, res) {
 })
 
 app.get("/register", function (req, res) {
-  // let templateVars = {
-  //   username: req.session.username
-  // }
-  res.render("register")
+  let templateVars = {
+    username: req.session.username
+  }
+  res.render("register", templateVars)
 })
 
 app.get("/players/:username", function (req, res) {
@@ -151,7 +151,7 @@ function arrLengthChecker (arr) {
   }
 }
 
-// bothPlayersInfo = [['andrew', 3],['vincent', 2]];
+// bothPlayersInfo = [['john', 3],['vincent', 2]];
 function winningHandUser (arr) {
   if ((arr[0])[1] > (arr[1])[1]) {
     return ((arr[0])[0]);
@@ -170,7 +170,7 @@ app.get("/games/goofspiel/new", function (req, res) {
   // // both players have played - not sure if this isn't working because hardcoded or because problem with
   // // clearing bothPlayersInfo
 
-  // let bothPlayersInfo = [['andrew', 2],['vincent', 3]];
+  // let bothPlayersInfo = [['john', 2],['vincent', 3]];
 
 
 
@@ -178,7 +178,7 @@ app.get("/games/goofspiel/new", function (req, res) {
   // let bothPlayersInfo = [['vincent', 3]];
 
   // // opponent has played
-    let bothPlayersInfo = [['andrew', 3]];
+    let bothPlayersInfo = [['john', 3]];
 
   // // no players have played
 
@@ -243,88 +243,91 @@ app.get("/games/goofspiel/new", function (req, res) {
 
 
 app.get("/games/goofspiel/:sessionID", function (req, res) {
-  req.session.username = 'vincent'
-  req.session.sessionID = req.params.sessionID;
-  console.log("opponent has played the card 3")
-  let bothPlayersInfo = [['andrew', 3]];
-  let sessionID = req.session.sessionID;
-  let username = req.session.username;
-  console.log(username, sessionID, "user and id check")
+  if (req.session.username) {
+    req.session.sessionID = req.params.sessionID;
+    console.log("opponent has played the card 3")
+    let bothPlayersInfo = [['john', 3]];
+    let sessionID = req.session.sessionID;
+    let username = req.session.username;
+    console.log(username, sessionID, "user and id check")
 
-  let templateVars = {
-    username: username,
-    sessionID: sessionID
-  }
-  res.render("existingGoofspielGame", templateVars)
+    let templateVars = {
+      username: username,
+      sessionID: sessionID
+    }
+    res.render("existingGoofspielGame", templateVars)
 
-  const GSSession = io.of("goofspielSession")
-  function getHandFromDb () {
-    return new Promise ((resolve, reject) => {
-      knex.select('hand')
-      .from('players')
-      .where({
-        'username': username,
-        'session_id': sessionID
-      })
-      .asCallback ((err, rows) => {
-
-        resolve(rows)
-      })
-    })
-  }
-  GSSession.once('connection', function(socket) {
-    socket.join((String(sessionID)))
-    GSSession.to(String(sessionID)).emit('reJoin', "You've rejoined your game!");
-    console.log("you've rejoined the game")
-    getHandFromDb().then(result => {
-      console.log(result, "type is: ", typeof result, Array.isArray(result))
-
-      function returnHandArrayAsString (answer) {
-        for (let match of answer) {
-          return (match.hand.slice(1,match.hand.length - 1))
-        }
-      }
-      let handArray = returnHandArrayAsString(result).split(", ");
-      GSSession.to(String(sessionID)).emit('previousHandArray', handArray)
-    }) .then(result => {
-      console.log('then worked')
-
-      function processLatestCard () {
-        return new Promise ((resolve, reject) => {
-          socket.on('latestCard', function (from, msg) {
-            let playedCardValue = Number(msg);
-            let username = from;
-            if (checkPlayerNotInHandArray(bothPlayersInfo, username)) {
-              bothPlayersInfo.push([username, playedCardValue]);
-            } else {
-              console.log("this player has already played his hand")
-            }
-            console.log(bothPlayersInfo, "this is bothPlayersInfo");
-            resolve(bothPlayersInfo);
-          })
+    const GSSession = io.of("goofspielSession")
+    function getHandFromDb () {
+      return new Promise ((resolve, reject) => {
+        knex.select('hand')
+        .from('players')
+        .where({
+          'username': username,
+          'session_id': sessionID
         })
-      }
-      GSSession.to(String(sessionID)).emit('playerInfo', [bothPlayersInfo, username])
-      processLatestCard().then((result) => {
-        console.log("latest card sent")
-        if (bothPlayersInfo.length === 2) {
-          let winner = winningHandUser(result);
-          if (winner === null) {
-            // deal with ties here
-            GSSession.to(String(sessionID)).emit('resolvedHands', 0)
-          } else {
-            GSSession.to(String(sessionID)).emit('resolvedHands', winner)
+        .asCallback ((err, rows) => {
+
+          resolve(rows)
+        })
+      })
+    }
+    GSSession.once('connection', function(socket) {
+      socket.join((String(sessionID)))
+      GSSession.to(String(sessionID)).emit('reJoin', "You've rejoined your game!");
+      console.log("you've rejoined the game")
+      getHandFromDb().then(result => {
+        console.log(result, "type is: ", typeof result, Array.isArray(result))
+
+        function returnHandArrayAsString (answer) {
+          for (let match of answer) {
+            return (match.hand.slice(1,match.hand.length - 1))
           }
         }
-      })
-      socket.on('clearPlayerInfo', function (from, msg) {
-        if (msg) {
-          bothPlayersInfo = []
-          console.log(bothPlayersInfo, "updated version")
+        let handArray = returnHandArrayAsString(result).split(", ");
+        GSSession.to(String(sessionID)).emit('previousHandArray', handArray)
+      }) .then(result => {
+        console.log('then worked')
+
+        function processLatestCard () {
+          return new Promise ((resolve, reject) => {
+            socket.on('latestCard', function (from, msg) {
+              let playedCardValue = Number(msg);
+              let username = from;
+              if (checkPlayerNotInHandArray(bothPlayersInfo, username)) {
+                bothPlayersInfo.push([username, playedCardValue]);
+              } else {
+                console.log("this player has already played his hand")
+              }
+              console.log(bothPlayersInfo, "this is bothPlayersInfo");
+              resolve(bothPlayersInfo);
+            })
+          })
         }
+        GSSession.to(String(sessionID)).emit('playerInfo', [bothPlayersInfo, username])
+        processLatestCard().then((result) => {
+          console.log("latest card sent")
+          if (bothPlayersInfo.length === 2) {
+            let winner = winningHandUser(result);
+            if (winner === null) {
+              // deal with ties here
+              GSSession.to(String(sessionID)).emit('resolvedHands', 0)
+            } else {
+              GSSession.to(String(sessionID)).emit('resolvedHands', winner)
+            }
+          }
+        })
+        socket.on('clearPlayerInfo', function (from, msg) {
+          if (msg) {
+            bothPlayersInfo = []
+            console.log(bothPlayersInfo, "updated version")
+          }
+        })
       })
     })
-  })
+  } else {
+    res.redirect("/");
+  }
 })
 
 
