@@ -40,8 +40,12 @@ $(document).ready(function() {
   let templateVars = JSON.parse($(".rankTable").text());
   sortRankArray(templateVars)
   renderTableHTML(templateVars)
-  $(".loginToggle").slideToggle(function() {
-
+  $("#loginToggle").click(function() {
+    $(".userForm").css("display", "none")
+    $(".loginForm").slideToggle("slow")
+  })
+  $("#loginSubmit").click(function() {
+    $(".loginForm").css("display", "none")
   })
 })
 

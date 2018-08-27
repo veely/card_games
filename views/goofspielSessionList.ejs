@@ -23,12 +23,12 @@
     <header>
       <% include ./partials/_header %>
     </header>
-    <h4>Your Games</h4>
+    <main class="containerSessionList">
+    <h1>Your Games</h1>
     <form method="GET" action="/games/goofspiel/new">
       <input type="submit" value="Create Game" id="createButton">
     </form>
-    <main>
-      <h3>List of Goofspiel Sessions </h3>
+      <h3 class="listSessionTitle">List of Goofspiel Sessions </h3>
       <section class="sessionTable">
 <!-- script for inserting tables -->
       </section>

@@ -4,18 +4,18 @@ function createTableHTML (arr) {
   let tableHTML = `
       <table>
         <tr>
-          <th>Session ID</th>
-          <th>Opponent Name</th>
-          <th>P1 is Host</th>
-          <th></th>
+          <th class="sessionTableCell">Session ID</th>
+          <th class="sessionTableCell">Opponent Name</th>
+          <th class="sessionTableCell">P1 is Host</th>
+          <th class="sessionTableCell"></th>
         </tr>`
   for (let match of arr) {
     tableHTML += `
-        <tr>
-          <td>${match.session_id}</td>
-          <td>${match.username}</td>
-          <td>${!match.player_is_host}</td>
-          <td>
+        <tr class="sessionTableRow">
+          <td class="sessionTableCell">${match.session_id}</td>
+          <td class="sessionTableCell">${match.username}</td>
+          <td class="sessionTableCell">${!match.player_is_host}</td>
+          <td class="sessionTableCell">
             <button>Join Game</button>
           </td>
         </tr>

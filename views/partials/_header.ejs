@@ -4,23 +4,23 @@
   <a href="/" id="home">Home</a>
   <% if (!username) {%>
     <section class="userForm">
-      <a id="registerLink" href="/register">Register</a>
       <button name="login" id="loginToggle">Login</button>
+      <a id="registerLink" href="/register">Register</a>
     </section>
   <% } else if (username) { %>
-    <section class="userForm">
-      <h2>Welcome, <%= username %></h2>
+    <section class="welcomeForm">
       <form method="POST" action="/logout">
         <button type="submit" name="logout" id="logout">Logout</button>
       </form>
+      <h2 id="welcomeHeader">Welcome, <%= username %></h2>
     </section>
   <% } %>
   <section class="loginForm">
     <form method="POST" action="/login">
-      <input type="text" name="username" style="width 250px" id="usernameText">
       <label>Username</label>
-      <input type="password" name="passwordLogin" style="width 250px" id="passwordText">
+      <input type="text" name="username" style="width 250px" id="usernameText">
       <label>Password</label>
+      <input type="password" name="passwordLogin" style="width 250px" id="passwordText">
       <input type="submit" value="login" id="loginSubmit">
     </form>
   </section>
