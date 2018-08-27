@@ -1,6 +1,6 @@
 "use strict";
 
-const myHand; //(grab this from the socket emission later on in the function as a promise)
+let myHand; //(grab this from the socket emission later on in the function as a promise)
 const cardValueTable = [['A', 1], ['2', 2], ['3', 3], ['4', 4], ['5', 5], ['6', 6], ['7', 7], ['8', 8], ['9', 9], ['10', 10], ['J', 11], ['Q', 12], ['K', 13]];
 
 function findCardValue (cardText) {
@@ -22,7 +22,7 @@ let score2 = 40;
 //temporarily hardcoded, need to
 
 // variable for prize card
-let cardValue;
+let cardValue = gamePrize[gamePrize.length - 1][1];
 let clearMsg;
 
 // variable for number of hand cards
@@ -46,11 +46,12 @@ function createOpponentHand () {
 // [4, 5, 8, 10, Q]
 function createMyHand () {
   let myHandCode = ""
+  console.log(typeof myHand, "myhand")
   for (let card of myHand) {
     myHandCode += `<button type="submit" class="card" value="${findCardValue(card)}">${card}</button>`
   }
-  return myCardCode
-  console.log(mycardCode)
+  return myHandCode
+  console.log(myHandCode)
 }
 
 function renderMyHand() {
@@ -154,17 +155,30 @@ function checkPlayerInHandArray (arr, username) {
 
 
 $(document).ready(function() {
-
+  console.log("opponent has played the card 3")
+  $("#loginToggle").click(function() {
+    $(".userForm").css("display", "none")
+    $(".loginForm").slideToggle("slow")
+  })
+  $("#loginSubmit").click(function() {
+    $(".loginForm").css("display", "none")
+  })
 
   function changeMyHand () {
     myCardCount --;
   }
   let username;
-  const socket = io.connect('/goofspielNew');
-  newBoardState();
+  const socket = io.connect('/goofspielSession');
   socket.on('reJoin', function (data) {
     console.log(data);
   });
+  socket.on('previousHandArray', function(data) {
+    console.log(data, ": hand array")
+    cardCount = data.length;
+    myCardCount = data.length;
+    myHand = data;
+    newBoardState();
+  })
   console.log(cardValue, "hi")
   function resolveHands() {
     return new Promise ((resolve, reject) => {

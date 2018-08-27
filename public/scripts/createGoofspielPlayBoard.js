@@ -160,6 +160,7 @@ function checkPlayerInHandArray (arr, username) {
 }
 
 $(document).ready(function() {
+  console.log("opponent has played the card 3")
   function changeMyHand () {
     myCardCount --;
   }

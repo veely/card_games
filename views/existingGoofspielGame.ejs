@@ -9,46 +9,37 @@
 
     <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
 
+    <link rel="stylesheet" href="/styles/nav.css" type="text/css" />
+
     <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
 
-    <script type="text/javascript" src="/scripts/app.js"></script>
+    <script type="text/javascript" src="/scripts/createGoofspielSessionPlayBoard.js"></script>
 
-    <script type="text/javascript" src="/scripts/createGoofspielPlayBoard.js"></script>
-    <script type="text/javascript" src="/scripts/createDeck.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
 
   </head>
   <body>
-
     <header>
+    <%console.log(username)%>
       <% include ./partials/_header %>
       <h1>Session Name</h1>
     </header>
     <main>
-      <section class="hands opponent-hand">
+      <section class="hands oppHandContainer">
 <!-- script for creating opponent's hand -->
 
-        <button>Card 1</button>
-        <button>Card 2</button>
-        <button>Card 3</button>
-        <button>Card 4</button>
-        <button>Card 5</button>
-        <button>Card 6</button>
-        <button>Card 7</button>
-        <button>Card 8</button>
-        <button>Card 9</button>
-        <button>Card 10 </button>
-        <button>Card 11 </button>
-        <button>Card 12 </button>
-        <button>Card 13 </button>
-        <!-- array.length -->
       </section>
-      <section class="hands prize-hand">
+      <section class="hands prizeHandContainer">
+<!-- script for creating prize hand -->
       </section>
-      <section class="hands my-hand">
+      <section class="hands myHandContainer">
+        <form method="GET" action="/goofspiel/newGameMove">
 <!--  script for creating your hand  -->
+        </form>
       </section>
-      <section class="scoreboard">
-        <h2>score section 0-0</h2>
+      <section class="scoreboardContainer">
+<!-- script for rendering scoreboard -->
       </section>
     </main>
   </body>

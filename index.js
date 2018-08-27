@@ -112,6 +112,7 @@ app.get("/games/goofspiel", function (req, res) {
           'session_id', subquery
         )
         .asCallback ((err, rows) => {
+          console.log(rows, "are rows")
           resolve(rows)
         })
       })
@@ -177,13 +178,13 @@ app.get("/games/goofspiel/new", function (req, res) {
   // let bothPlayersInfo = [['vincent', 3]];
 
   // // opponent has played
-  // let bothPlayersInfo = [['andrew', 3]];
+    let bothPlayersInfo = [['andrew', 3]];
 
   // // no players have played
 
 
 
-    let bothPlayersInfo = [];
+    // let bothPlayersInfo = [];
 
     req.session.sessionID = 3;
     const username = req.session.username;
@@ -239,51 +240,23 @@ app.get("/games/goofspiel/new", function (req, res) {
 })
 
 
-    // GSNew.once('connection', function(socket) {
-    //   socket.join(String(sessionID));
-    //   GSNew.to(String(sessionID)).emit('newJoin', "You've joined a game!");
-    //   GSNew.to(String(sessionID)).emit('playerInfo', [bothPlayersInfo, username])
-    //   function processLatestCard () {
-    //     return new Promise ((resolve, reject) => {
-    //       socket.on('latestCard', function (from, msg) {
-    //         let playedCardValue = Number(msg);
-    //         let username = from;
-    //         if (checkPlayerNotInHandArray(bothPlayersInfo, username)) {
-    //           bothPlayersInfo.push([username, playedCardValue]);
-    //         } else {
-    //           console.log("this player has already played his hand")
-    //         }
-    //         console.log(bothPlayersInfo, "this is bothPlayersInfo");
-    //         resolve(bothPlayersInfo);
-    //       })
-    //     })
-    //   }
-    //   processLatestCard().then((result) => {
-    //     console.log("latest card sent")
-    //     if (bothPlayersInfo.length === 2) {
-    //       let winner = winningHandUser(result);
-    //       if (winner === null) {
-    //         // deal with ties here
-    //         GSNew.to(String(sessionID)).emit('resolvedHands', 0)
-    //       } else {
-    //         GSNew.to(String(sessionID)).emit('resolvedHands', winner)
-    //       }
-    //     }
-    //   })
-    //   socket.on('clearPlayerInfo', function (from, msg) {
-    //     if (msg) {
-    //       bothPlayersInfo = []
-    //       console.log(bothPlayersInfo, "updated version")
-    //     }
-    //   })
-    // });
 
 
 app.get("/games/goofspiel/:sessionID", function (req, res) {
   req.session.username = 'vincent'
   req.session.sessionID = req.params.sessionID;
+  console.log("opponent has played the card 3")
+  let bothPlayersInfo = [['andrew', 3]];
   let sessionID = req.session.sessionID;
   let username = req.session.username;
+  console.log(username, sessionID, "user and id check")
+
+  let templateVars = {
+    username: username,
+    sessionID: sessionID
+  }
+  res.render("existingGoofspielGame", templateVars)
+
   const GSSession = io.of("goofspielSession")
   function getHandFromDb () {
     return new Promise ((resolve, reject) => {
@@ -294,54 +267,64 @@ app.get("/games/goofspiel/:sessionID", function (req, res) {
         'session_id': sessionID
       })
       .asCallback ((err, rows) => {
+
         resolve(rows)
       })
     })
   }
-  getHandFromDb().then(result => {
-    function returnHandArray () {
-      for (let match of result) {
-        return (match.hand)
+  GSSession.once('connection', function(socket) {
+    socket.join((String(sessionID)))
+    GSSession.to(String(sessionID)).emit('reJoin', "You've rejoined your game!");
+    console.log("you've rejoined the game")
+    getHandFromDb().then(result => {
+      console.log(result, "type is: ", typeof result, Array.isArray(result))
+
+      function returnHandArrayAsString (answer) {
+        for (let match of answer) {
+          return (match.hand.slice(1,match.hand.length - 1))
+        }
       }
-    }
-    let handArray = returnHandArray();
-    GSSession.once('connection', function(socket) {
-      socket.join((String(sessionID)))
-      GSNew.to(String(sessionID)).emit('reJoin', "You've rejoined your game!");
-      //add a socket.on for this rejoin
+      let handArray = returnHandArrayAsString(result).split(", ");
+      GSSession.to(String(sessionID)).emit('previousHandArray', handArray)
+    }) .then(result => {
+      console.log('then worked')
 
-      GSNew.to(String(sessionID)).emit('previousPlayerInfo', [handArray, username])
+      function processLatestCard () {
+        return new Promise ((resolve, reject) => {
+          socket.on('latestCard', function (from, msg) {
+            let playedCardValue = Number(msg);
+            let username = from;
+            if (checkPlayerNotInHandArray(bothPlayersInfo, username)) {
+              bothPlayersInfo.push([username, playedCardValue]);
+            } else {
+              console.log("this player has already played his hand")
+            }
+            console.log(bothPlayersInfo, "this is bothPlayersInfo");
+            resolve(bothPlayersInfo);
+          })
+        })
+      }
+      GSSession.to(String(sessionID)).emit('playerInfo', [bothPlayersInfo, username])
+      processLatestCard().then((result) => {
+        console.log("latest card sent")
+        if (bothPlayersInfo.length === 2) {
+          let winner = winningHandUser(result);
+          if (winner === null) {
+            // deal with ties here
+            GSSession.to(String(sessionID)).emit('resolvedHands', 0)
+          } else {
+            GSSession.to(String(sessionID)).emit('resolvedHands', winner)
+          }
+        }
+      })
+      socket.on('clearPlayerInfo', function (from, msg) {
+        if (msg) {
+          bothPlayersInfo = []
+          console.log(bothPlayersInfo, "updated version")
+        }
+      })
     })
-    //this is the hand array of the previous player;
-
-
-
-
   })
-
-  // if (req.session.username) {
-  // }
-  // knex.select('username', 'hand')
-  //   .from('players')
-  //   .where({
-  //     'session_id': req.params.sessionID,
-  //     'username': req.session.username
-  //   })
-  //   .asCallback(function(err, rows) {
-  //     let currentHand;
-  //     for (let player of rows) {
-  //       currentHand = player.hand
-  //     }
-  //     let templateVars = {
-  //       currentHand: currentHand,
-  //       username: username,
-  //       sessionID: sessionID
-  //     }
-  //     res.render("goofspiel", templateVars);
-  //     console.log(currentHand);
-  //     console.log(rows);
-  //   })
-
 })
 
 
