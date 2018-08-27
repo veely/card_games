@@ -44,11 +44,36 @@ function createOpponentHand () {
 };
 
 // [4, 5, 8, 10, Q]
+const cardImageArray = [
+  [1, 'id="ace1"'],
+  [2, 'id="two1"'],
+  [3, 'id="three1"'],
+  [4, 'id="four1"'],
+  [5, 'id="five1"'],
+  [6, 'id="six1"'],
+  [7, 'id="seven1"'],
+  [8, 'id="eight1"'],
+  [9, 'id="nine1"'],
+  [10, 'id="ten1"'],
+  [11, 'id="jack1"'],
+  [12, 'id="queen1"'],
+  [13, 'id="king1"']
+  ]
+
+function findIDForCardRender (cardValue) {
+  for (let eachDefinition of cardImageArray) {
+    if (cardValue === eachDefinition[0]) {
+      return eachDefinition[1];
+    }
+  }
+}
+
+
 function createMyHand () {
   let myHandCode = ""
   console.log(typeof myHand, "myhand")
   for (let card of myHand) {
-    myHandCode += `<button type="submit" class="card" value="${findCardValue(card)}">${card}</button>`
+    myHandCode += `<button type="submit" class="card" ${findIDForCardRender(findCardValue(card))} value="${findCardValue(card)}"></button>`
   }
   return myHandCode
   console.log(myHandCode)

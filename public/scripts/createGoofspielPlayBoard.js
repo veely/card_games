@@ -44,19 +44,19 @@ function createOpponentHand () {
 
 function createMyHand () {
   let myHandCode = `
-  <button type="submit" class='card' value="1">A</button>
-  <button type="submit" class='card' value="2">2</button>
-  <button type="submit" class='card' value="3">3</button>
-  <button type="submit" class='card' value="4">4</button>
-  <button type="submit" class='card' value="5">5</button>
-  <button type="submit" class='card' value="6">6</button>
-  <button type="submit" class='card' value="7">7</button>
-  <button type="submit" class='card' value="8">8</button>
-  <button type="submit" class='card' value="9">9</button>
-  <button type="submit" class='card' value="10">10</button>
-  <button type="submit" class='card' value="11">J</button>
-  <button type="submit" class='card' value="12">Q</button>
-  <button type="submit" class='card' value="13">K</button>
+  <button type="submit" class='card' id="ace1" value="1"></button>
+  <button type="submit" class='card' id="two1" value="2"></button>
+  <button type="submit" class='card' id="three1" value="3"></button>
+  <button type="submit" class='card' id="four1" value="4"></button>
+  <button type="submit" class='card' id="five1" value="5"></button>
+  <button type="submit" class='card' id="six1" value="6"></button>
+  <button type="submit" class='card' id="seven1" value="7"></button>
+  <button type="submit" class='card' id="eight1" value="8"></button>
+  <button type="submit" class='card' id="nine1" value="9"></button>
+  <button type="submit" class='card' id="ten1" value="10"></button>
+  <button type="submit" class='card' id="jack1" value="11"></button>
+  <button type="submit" class='card' id="queen1" value="12"></button>
+  <button type="submit" class='card' id="king1" value="13"></button>
   `;
   return myHandCode
 }
