@@ -1,24 +1,27 @@
 <nav id="nav-bar">
-  <img class="logo" src="/images/Cards.jpg" style="max-width:200px; max-height:200px">
+  <img class="logo" src="/images/Cards.jpg">
   <span class="header">House of Cards</span>
-  <a href="/">Home</a>
+  <a href="/" id="home">Home</a>
+  <% if (!username) {%>
+    <section class="userForm">
+      <a id="registerLink" href="/register">Register</a>
+      <button name="login" id="loginToggle">Login</button>
+    </section>
+  <% } else if (username) { %>
+    <section class="userForm">
+      <h2>Welcome, <%= username %></h2>
+      <form method="POST" action="/logout">
+        <button type="submit" name="logout" id="logout">Logout</button>
+      </form>
+    </section>
+  <% } %>
+  <section class="loginForm">
+    <form method="POST" action="/login">
+      <input type="text" name="username" style="width 250px" id="usernameText">
+      <label>Username</label>
+      <input type="password" name="passwordLogin" style="width 250px" id="passwordText">
+      <label>Password</label>
+      <input type="submit" value="login" id="loginSubmit">
+    </form>
+  </section>
 </nav>
-<section>
-  <a href="/register">Register</a>
-  <button name="login" id="loginToggle">Login</button>
-</section>
-<section>
-  <h2>Welcome, Username</h2>
-  <form method="POST" action="/logout">
-    <button type="submit" name="logout" id="logout">Logout</button>
-  </form>
-</section>
-<section>
-  <form method="POST" action="/login">
-    <input type="text" name="username" style="width 250px" id="usernameText">
-    <label>Username</label>
-    <input type="password" name="passwordLogin" style="width 250px" id="passwordText">
-    <label>Password</label>
-    <input type="submit" value="login" id="loginSubmit">
-  </form>
-</section>

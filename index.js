@@ -46,11 +46,27 @@ app.set("view engine", "ejs");
 
 
 
+
+
+
 app.get("/", function (req, res) {
-  let templateVars = {
-    username: req.session.username
+  function findRankings () {
+    return new Promise ((resolve, reject) => {
+      knex.select('username', 'wins')
+      .from('users')
+      .asCallback ((err,rows) => {
+        resolve(rows)
+      })
+    })
   }
-  res.render("index", templateVars);
+  findRankings().then(result => {
+    console.log(result)
+    let templateVars = {
+      username: req.session.username,
+      playerRanking: JSON.stringify(result)
+    }
+    res.render("index", templateVars);
+  })
 })
 
 app.get("/register", function (req, res) {
@@ -71,7 +87,6 @@ app.get("/players/:username", function (req, res) {
 
 
 app.get("/games/goofspiel", function (req, res) {
-  req.session.username = 'vincent';
   let username = req.session.username
   console.log("get working")
   // need to wrap this in another promise to find opponent username
@@ -133,7 +148,7 @@ function arrLengthChecker (arr) {
   }
 }
 
-// bothPlayersInfo = [['andrew', 3],['vincent1', 2]];
+// bothPlayersInfo = [['andrew', 3],['vincent', 2]];
 function winningHandUser (arr) {
   if ((arr[0])[1] > (arr[1])[1]) {
     return ((arr[0])[0]);
@@ -147,26 +162,26 @@ function winningHandUser (arr) {
 
 
 app.get("/games/goofspiel/new", function (req, res) {
+//
+// // both players have played - not sure if this isn't working because hardcoded or because problem with
+// // clearing bothPlayersInfo
+
+// let bothPlayersInfo = [['andrew', 2],['vincent', 3]];
 
 
 
-  // // both players have played - not sure if this isn't working because hardcoded or because problem with
-  //clearing bothPlayersInfo
+// // you have played
+// let bothPlayersInfo = [['vincent', 3]];
 
-  // let bothPlayersInfo = [['andrew', 2],['vincent1', 3]];
+// // opponent has played
+// let bothPlayersInfo = [['andrew', 3]];
+
+// // no players have played
 
 
 
-  // // you have played
-  // let bothPlayersInfo = [['vincent1', 3]];
-
-  // // opponent has played
-  // let bothPlayersInfo = [['andrew', 3]];
-
-  // // no players have played
   let bothPlayersInfo = [];
 
-  req.session.username = 'vincent1';
   req.session.sessionID = 3;
   const username = req.session.username;
   const sessionID = req.session.sessionID;
@@ -187,7 +202,6 @@ app.get("/games/goofspiel/new", function (req, res) {
           let playedCardValue = Number(msg);
           let username = from;
           if (checkPlayerNotInHandArray(bothPlayersInfo, username)) {
-            console.log(bothPlayersInfo, "arr", username)
             bothPlayersInfo.push([username, playedCardValue]);
           } else {
             console.log("this player has already played his hand")
@@ -266,6 +280,7 @@ app.post("/login", function (req, res) {
   //check that the username and password are in the system
   login.login(username, password).then( result => {
     console.log(result);
+    console.log(username, "logged in")
     req.session.username = username;
     res.redirect("/");
   })
@@ -282,7 +297,7 @@ app.post("/register", function (req, res) {
   //check that the username and password are in the system
   register.register(username, password).then( result => {
     console.log(result);
-    // req.session.username = username;
+    req.session.username = username;
     res.redirect("/");
   })
   .catch( err => {
@@ -292,7 +307,7 @@ app.post("/register", function (req, res) {
 })
 
 app.post("/logout", function (req, res) {
-  req.session.username = null;
+  req.session = null;
   console.log("somebody logged out");
   res.redirect("/");
 })

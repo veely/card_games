@@ -8,6 +8,8 @@
 
     <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
 
+    <link rel="stylesheet" href="/styles/nav.css" type="text/css" />
+
     <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
 
     <script type="text/javascript" src="/scripts/app.js"></script>
@@ -22,34 +24,32 @@
     <main class="container" id="gameList">
       <h3>List of Games</h3>
       <form method="GET" action="/games/goofspiel">
-        <input type="submit" id="goofspielNav" value="Goofspiel">
-        <a href="https://en.wikipedia.org/wiki/Goofspiel">Goofspiel Instructions</a>
+        <input class="gameType" type="submit" id="goofspielNav" value="Goofspiel">
+        <a class="gameLink" href="https://en.wikipedia.org/wiki/Goofspiel">Instructions</a>
       </form>
-      <form method="GET" action="/games/goofspiel">
-        <input type="submit" value="Blackjack">
-        <a href="www.wikiinstructions.com">Game Two Instructions</a>
+      <form>
+        <input class="gameType" type="submit" value="2 Card Draw">
+        <a class="gameLink" href="https://en.wikipedia.org/wiki/Draw_poker">Instructions</a>
       </form>
-      <form method="GET" action="/games/goofspiel">
-        <input type="submit" value="5 Card Draw">
-        <a href="www.wikiinstructions.com">Game Three Instructions</a>
+      <form>
+        <input class="gameType" type="submit" value="BlackJack">
+        <a class="gameLink" href="https://en.wikipedia.org/wiki/Blackjack">Instructions</a>
+      </form>
+      <form>
+        <input class="gameType" type="submit" value="Texas Hold 'Em">
+        <a class="gameLink" href="https://en.wikipedia.org/wiki/Texas_hold_%27em">Instructions</a>
       </form>
     </main>
     <main class="container" id="gameList">
       <h1>List of Player Rankings</h1>
-      <table style="width:50%">
-        <tr>
-          <th>Name</th>
-          <th>Rank</th>
-        </tr>
-        <tr>
-          <td>Lao Tzu</td>
-          <td>Gold</td>
-        </tr>
-        <tr>
-          <td>Wong fei hung</td>
-          <td>Silver</td>
-        </tr>
+      <table class="rankingTable" style="width:50%">
+
+<!-- script for adding in ranking table information-->
+
       </table>
     </main>
+    <h1 style="display:none" class="rankTable">
+      <%= playerRanking %>
+    </h1>
   </body>
 </html>

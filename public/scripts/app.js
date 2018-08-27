@@ -1,75 +1,47 @@
 "use strict";
 
-$(() => {
-  $.ajax({
-    method: "GET",
-    url: "/api/users"
-  }).done((users) => {
-    for(user of users) {
-      $("<div>").text(user.name).appendTo($("body"));
-    }
-  });;
-});
+function createRankTableHTML (arr) {
+  let tableHTML = `
+    <tr>
+      <th>Name</th>
+      <th>Rank</th>
+      <th>Wins</th>
+    </tr>
+  `
 
+  let count = 1
+  for (let player of arr) {
+    tableHTML += `
+        <tr>
+          <td>${player.username}</td>
+          <td>${count}</td>
+          <td>${player.wins}</td>
+        </tr>
+    `
+    count ++
+  }
+  tableHTML += "</table>"
+  return tableHTML
+}
 
-// const GS = io('/goofspiel');
-// // game session ID is accessed through a cookie
-// // connecting socket to the goofspiel namespace
-// GS.on('connection', function(socket) {
-//   socket.join('put in game session ID')
-//   GS.to('put in game session ID').emit('game information on hands')
-// })
+function renderTableHTML (arr) {
+  $('.rankingTable').append(createRankTableHTML(arr))
+}
 
-// header
+function sortByRank (a,b) {
+  return b.wins - a.wins;
+}
+
+function sortRankArray (arr) {
+  arr.sort(sortByRank);
+}
 
 $(document).ready(function() {
+  let templateVars = JSON.parse($(".rankTable").text());
+  sortRankArray(templateVars)
+  renderTableHTML(templateVars)
+  $(".loginToggle").slideToggle(function() {
 
-  // header buttons
-  $("#loginSubmit").click(function () {
-    console.log("okay cool")
-    let $loginInfo = {
-    username: $("#usernameText"),
-    password: $("#passwordText")
-    }
-    $.post("/login", $loginInfo, function() {
-    })
   })
-
-  $("#registerSubmit").click(function() {
-    let $registerInfo = {
-      name: $("#fullNameReg"),
-      birthdate: $("birthDateReg"),
-      email: $("emailReg"),
-      username: $("usernameReg"),
-      password: $("passwordReg")
-    }
-    $.post("/register", $registerInfo, function() {
-    })
-  })
-
 })
 
-  // header buttons
-  // $("#loginSubmit").click(function () {
-  //   console.log("okay cool")
-  //   let $loginInfo = {
-  //   username: $("#usernameText"),
-  //   password: $("#passwordText")
-  //   }
-  //   console.log($loginInfo.password);
-
-  //   $.post("/login", $loginInfo, function() {
-  //   })
-  // })
-
-  // $("#registerSubmit").click(function() {
-  //   let $registerInfo = {
-  //     name: $("#fullNameReg"),
-  //     birthdate: $("birthDateReg"),
-  //     email: $("emailReg"),
-  //     username: $("usernameReg"),
-  //     password: $("passwordReg")
-  //   }
-  //   $.post("/register", $registerInfo, function() {
-  //   })
-  // })
