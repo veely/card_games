@@ -239,34 +239,108 @@ app.get("/games/goofspiel/new", function (req, res) {
 })
 
 
+    // GSNew.once('connection', function(socket) {
+    //   socket.join(String(sessionID));
+    //   GSNew.to(String(sessionID)).emit('newJoin', "You've joined a game!");
+    //   GSNew.to(String(sessionID)).emit('playerInfo', [bothPlayersInfo, username])
+    //   function processLatestCard () {
+    //     return new Promise ((resolve, reject) => {
+    //       socket.on('latestCard', function (from, msg) {
+    //         let playedCardValue = Number(msg);
+    //         let username = from;
+    //         if (checkPlayerNotInHandArray(bothPlayersInfo, username)) {
+    //           bothPlayersInfo.push([username, playedCardValue]);
+    //         } else {
+    //           console.log("this player has already played his hand")
+    //         }
+    //         console.log(bothPlayersInfo, "this is bothPlayersInfo");
+    //         resolve(bothPlayersInfo);
+    //       })
+    //     })
+    //   }
+    //   processLatestCard().then((result) => {
+    //     console.log("latest card sent")
+    //     if (bothPlayersInfo.length === 2) {
+    //       let winner = winningHandUser(result);
+    //       if (winner === null) {
+    //         // deal with ties here
+    //         GSNew.to(String(sessionID)).emit('resolvedHands', 0)
+    //       } else {
+    //         GSNew.to(String(sessionID)).emit('resolvedHands', winner)
+    //       }
+    //     }
+    //   })
+    //   socket.on('clearPlayerInfo', function (from, msg) {
+    //     if (msg) {
+    //       bothPlayersInfo = []
+    //       console.log(bothPlayersInfo, "updated version")
+    //     }
+    //   })
+    // });
+
 
 app.get("/games/goofspiel/:sessionID", function (req, res) {
-  if (req.session.username) {
-  }
-  req.session.sessionID = req.params.sessionID;
   req.session.username = 'vincent'
+  req.session.sessionID = req.params.sessionID;
   let sessionID = req.session.sessionID;
   let username = req.session.username;
-  knex.select('username', 'hand')
-    .from('players')
-    .where({
-      'session_id': req.params.sessionID,
-      'username': req.session.username
+  const GSSession = io.of("goofspielSession")
+  function getHandFromDb () {
+    return new Promise ((resolve, reject) => {
+      knex.select('hand')
+      .from('players')
+      .where({
+        'username': username,
+        'session_id': sessionID
+      })
+      .asCallback ((err, rows) => {
+        resolve(rows)
+      })
     })
-    .asCallback(function(err, rows) {
-      let currentHand;
-      for (let player of rows) {
-        currentHand = player.hand
+  }
+  getHandFromDb().then(result => {
+    function returnHandArray () {
+      for (let match of result) {
+        return (match.hand)
       }
-      let templateVars = {
-        currentHand: currentHand,
-        username: username,
-        sessionID: sessionID
-      }
-      res.render("goofspiel", templateVars);
-      console.log(currentHand);
-      console.log(rows);
+    }
+    let handArray = returnHandArray();
+    GSSession.once('connection', function(socket) {
+      socket.join((String(sessionID)))
+      GSNew.to(String(sessionID)).emit('reJoin', "You've rejoined your game!");
+      //add a socket.on for this rejoin
+
+      GSNew.to(String(sessionID)).emit('previousPlayerInfo', [handArray, username])
     })
+    //this is the hand array of the previous player;
+
+
+
+
+  })
+
+  // if (req.session.username) {
+  // }
+  // knex.select('username', 'hand')
+  //   .from('players')
+  //   .where({
+  //     'session_id': req.params.sessionID,
+  //     'username': req.session.username
+  //   })
+  //   .asCallback(function(err, rows) {
+  //     let currentHand;
+  //     for (let player of rows) {
+  //       currentHand = player.hand
+  //     }
+  //     let templateVars = {
+  //       currentHand: currentHand,
+  //       username: username,
+  //       sessionID: sessionID
+  //     }
+  //     res.render("goofspiel", templateVars);
+  //     console.log(currentHand);
+  //     console.log(rows);
+  //   })
 
 })
 
