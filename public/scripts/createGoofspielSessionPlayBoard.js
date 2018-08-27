@@ -287,6 +287,18 @@ $(document).ready(function() {
    .catch((err) => {
     console.log(err);
   })
+
+//
+
+  $(".saveGameButton").click(function() {
+    let saveGameData = {
+      myHandArray: myHand,
+      prizeArray: gamePrize
+    }
+    console.log("your save data is being sent!")
+    $.post("/goofspiel/:sessionID/save", saveGameData, function() {
+    })
+  })
 });
 
 

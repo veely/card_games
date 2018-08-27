@@ -383,6 +383,15 @@ app.post("/logout", function (req, res) {
 })
 
 
+app.post("/goofspiel/:sessionID/save", function(req, res) {
+
+  // !!!!!!!!
+  // req.body is an object with your hand array and the prize array
+  // need to dynamically remove the card that you played
+  // from myHandArray so you're sending the right array over after a card has been played
+
+})
+
 // // namespaces of different games
 // const GS = io.of('/goofspiel')
 
